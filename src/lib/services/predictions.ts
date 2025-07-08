@@ -1,6 +1,6 @@
 import { supabase } from '../supabase'
 import { callOpenRouterAPI } from './openrouter'
-import { getMatchStats, getMatchOdds, getTeamForm } from './api-football'
+import { getMatchStats, getMatchOdds, getTeamForm } from './enhanced-api-football'
 import { getCachedPrediction, setCachedPrediction } from './cache'
 import type { 
   PredictionRequest, 

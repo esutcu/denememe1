@@ -80,28 +80,28 @@ export class PromptBuilder {
 🏆 **Lig:** ${league_name}
 
 📊 **Takım Formları (Son 5 Maç):**
-• ${home_team}: ${this.formatForm(home_form)}
-• ${away_team}: ${this.formatForm(away_form)}
+- ${home_team}: ${this.formatForm(home_form)}
+- ${away_team}: ${this.formatForm(away_form)}
 `
 
     if (stats) {
       prompt += `
 📈 **Maç İstatistikleri:**
-• Şutlar: ${stats.shots?.total || 'N/A'} (İsabetli: ${stats.shots?.on || 'N/A'})
-• Top Hakimiyeti: %${stats.possession || 'N/A'}
-• Faul: ${stats.fouls || 'N/A'}
-• Korner: ${stats.corners || 'N/A'}
+- Şutlar: ${stats.shots?.total || 'N/A'} (İsabetli: ${stats.shots?.on || 'N/A'})
+- Top Hakimiyeti: %${stats.possession || 'N/A'}
+- Faul: ${stats.fouls || 'N/A'}
+- Korner: ${stats.corners || 'N/A'}
 `
     }
 
     if (odds) {
       prompt += `
 💰 **Bahis Oranları:**
-• Ev Sahibi Galibiyeti (1): ${odds['1']}
-• Beraberlik (X): ${odds['X']}
-• Deplasman Galibiyeti (2): ${odds['2']}
-• Üst 2.5 Gol: ${odds.over_2_5 || 'N/A'}
-• Alt 2.5 Gol: ${odds.under_2_5 || 'N/A'}
+- Ev Sahibi Galibiyeti (1): ${odds['1']}
+- Beraberlik (X): ${odds['X']}
+- Deplasman Galibiyeti (2): ${odds['2']}
+- Üst 2.5 Gol: ${odds.over_2_5 || 'N/A'}
+- Alt 2.5 Gol: ${odds.under_2_5 || 'N/A'}
 `
     }
 
