@@ -60,22 +60,22 @@ const About = () => {
 
   const team = [
     {
-      name: 'Dr. Ahmet Yılmaz',
+      name: 'Hasan Devecioğlu',
       role: 'Kurucu & CTO',
-      expertise: 'Makine Öğrenimi, Veri Bilimi',
-      description: '15+ yıl AI/ML deneyimi'
+      expertise: 'Proje Yönetimi, Startup Geliştirme',
+      description: '30+ yıl IT ve yazılım sektörü deneyimi'
     },
     {
-      name: 'Ayşe Demir',
+      name: 'Erol Doğan',
       role: 'Baş Veri Bilimci',
-      expertise: 'Spor Analitiği, Neural Networks',
-      description: 'FIFA ve UEFA projelerinde çalıştı'
+      expertise: 'Makine Öğrenimi, Veri Bilimi',
+      description: '5+ yıl AI/ML deneyimi'
     },
     {
-      name: 'Mehmet Kaya',
+      name: 'Anıl Kaya',
       role: 'Futbol Analisti',
       expertise: 'Taktik Analiz, Performans Ölçüm',
-      description: 'Eski profesyonel futbolcu'
+      description: 'Eski futbolcu'
     }
   ]
 
@@ -92,20 +92,20 @@ const About = () => {
     },
     {
       year: '2024',
-      title: '180+ Lig Desteği',
+      title: '20+ Lig Desteği',
       description: 'Küresel ölçekte lig desteğini genişlettik'
     },
     {
       year: '2025',
-      title: '%78 Doğruluk Oranı',
+      title: '%68 Doğruluk Oranı',
       description: 'Sektörün en yüksek tahmin doğruluğuna ulaştık'
     }
   ]
 
   const stats = [
     { value: '2,500+', label: 'Aktif Kullanıcı' },
-    { value: '%78', label: 'Ortalama Doğruluk' },
-    { value: '180+', label: 'Desteklenen Lig' },
+    { value: '%68', label: 'Ortalama Doğruluk' },
+    { value: '20+', label: 'Desteklenen Lig' },
     { value: '500+', label: 'Günlük Tahmin' }
   ]
 
@@ -232,7 +232,7 @@ const About = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="font-medium">Neural Network Analizleri</span>
+                  <span className="font-medium">Yapay Sinir Ağı Analizleri</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500" />

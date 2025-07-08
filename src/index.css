@@ -84,3 +84,8 @@ button[class*="bg-gradient"] {
 .dark .text-gray-400 {
   color: #d1d5db !important;
 }
+
+/* Progress bar styles */
+.progress-bar {
+  width: var(--progress-width, 0%);
+}

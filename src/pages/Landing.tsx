@@ -19,7 +19,7 @@ const Landing = () => {
     },
     { 
       label: 'Tahmin Doğruluğu', 
-      value: '%78', 
+      value: '%68', 
       icon: Target,
       color: 'text-green-500'
     },
@@ -39,21 +39,21 @@ const Landing = () => {
 
   const testimonials = [
     {
-      name: 'Ahmet Özkan',
+      name: 'Ahmet Kolak',
       role: 'Futbol Analisti',
-      content: 'ScoreResultsAI sayesinde tahminlerimin doğruluğu %65\'ten %82\'ye çıktı. İnanılmaz bir platform!',
+      content: 'ScoreResultsAI kullanıyorum evet tahminlerimin doğruluğu %52\'ye çıktı. Başarılı bir platform.',
       rating: 5
     },
     {
-      name: 'Fatma Kaya',
+      name: 'Nazım Merter',
       role: 'Spor Bahis Uzmanı',
-      content: 'AI analizleri çok detaylı ve güvenilir. Özellikle canlı maç tahminleri mükemmel.',
+      content: 'AI analizleri çok detaylı ve güvenilir. Özellikle maç tahminleri başarılı.',
       rating: 5
     },
     {
-      name: 'Mehmet Demir',
-      role: 'Futbol Antrenörü',
-      content: 'Takımımın stratejisini geliştirmek için kullanıyorum. Çok yararlı içgörüler sağlıyor.',
+      name: 'Pınar Demir',
+      role: 'Kadın Futbol Antrenörü',
+      content: 'Takımımın stratejisini geliştirmek için kullanıyorum, faydalı olduğunu düşünüyorum.',
       rating: 4
     }
   ]
@@ -75,7 +75,7 @@ const Landing = () => {
         
         <div className="relative container mx-auto text-center">
           <Badge className="mb-6 text-sm px-4 py-2">
-            🚀 Yapay Zeka Destekli Futbol Analizi
+            Yapay Zeka Destekli Futbol Analizi
           </Badge>
           
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
@@ -304,6 +304,7 @@ const Landing = () => {
               className="text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-gray-800"
             >
               Daha Fazla Bilgi
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
         </div>

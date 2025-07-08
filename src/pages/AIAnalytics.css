@@ -1,0 +1,15 @@
+/* Progress bar styles */
+.progress-bar-container {
+    width: 100%;
+    background-color: #e5e7eb; /* bg-gray-200 */
+    border-radius: 9999px; /* rounded-full */
+    height: 0.5rem; /* h-2 */
+}
+
+.progress-bar {
+    height: 0.5rem; /* h-2 */
+    border-radius: 9999px; /* rounded-full */
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+}

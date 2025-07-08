@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
@@ -19,26 +19,28 @@ import {
   ArrowRight
 } from 'lucide-react'
 import { aiFeatures } from '../constants/features'
-
+import './AIAnalytics.css'
+import { useNavigate } from 'react-router-dom'
 const AIAnalytics = () => {
   const [selectedFeature, setSelectedFeature] = useState(aiFeatures[0])
   const [activeTab, setActiveTab] = useState('overview')
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [showVideo, setShowVideo] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const navigate = useNavigate()
 
   const aiCapabilities = [
     {
       title: 'Neural Network Modelleri',
       description: '12 farklı LLM modeli ile gelişmiş tahmin sistemi',
       icon: Brain,
-      metrics: ['Model Sayısı: 12', 'Doğruluk: %78+', 'Hız: <100ms']
+      metrics: ['Model Sayısı: 12', 'Doğruluk: %68+', 'Hız: <100ms']
     },
     {
       title: 'Gerçek Zamanlı Analiz',
       description: 'Maç sırasında anlık veri işleme ve tahmin güncelleme',
       icon: Activity,
-      metrics: ['Gecikme: <50ms', 'Güncelleme: 30sn', 'Kapsam: 180+ lig']
+      metrics: ['Gecikme: <50ms', 'Güncelleme: 30sn', 'Kapsam: 20+ lig']
     },
     {
       title: 'Büyük Veri İşleme',
@@ -248,10 +250,13 @@ const AIAnalytics = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full">
-                      Bu Özelliği Deneyin
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                    <Button
+    className="w-full"
+    onClick={() => navigate('/auth')}
+  >
+    Bu Özelliği Deneyin
+    <ArrowRight className="ml-2 h-4 w-4" />
+  </Button>
                   </CardContent>
                 </Card>
               </div>
@@ -320,8 +325,8 @@ const AIAnalytics = () => {
                       </div>
                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div 
-                          className={`${metric.color} h-2 rounded-full transition-all duration-300`}
-                          style={{ width: `${metric.value}%` }}
+                          className={`${metric.color} h-2 rounded-full transition-all duration-300 progress-bar`}
+                          data-progress={metric.value}
                         />
                       </div>
                     </div>
@@ -342,19 +347,19 @@ const AIAnalytics = () => {
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium">OpenRouter LLM Ensemble</div>
+                      <div className="font-medium">LLM Topluluğu / Toplu Model Sistemi</div>
                       <div className="text-sm text-muted-foreground">12 farklı dil modeli kombinasyonu</div>
                     </div>
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium">Neural Network Classifier</div>
+                      <div className="font-medium">Yapay Sinir Ağı Sınıflandırıcısı</div>
                       <div className="text-sm text-muted-foreground">Derin öğrenme sınıflandırıcısı</div>
                     </div>
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium">Random Forest Regressor</div>
-                      <div className="text-sm text-muted-foreground">Ensemble learning algoritması</div>
+                      <div className="font-medium">Rastgele Orman Regresyon Modeli</div>
+                      <div className="text-sm text-muted-foreground">Model öğrenme algoritması</div>
                     </div>
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium">Gradient Boosting</div>
+                      <div className="font-medium">Aşamalı Artırma (Gradient Boosting) Yöntemi</div>
                       <div className="text-sm text-muted-foreground">Adaptif artyrılmış öğrenme</div>
                     </div>
                   </div>
@@ -372,15 +377,15 @@ const AIAnalytics = () => {
                       <div className="text-sm text-muted-foreground">Gerçek zamanlı maç verileri</div>
                     </div>
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium">Historical Database</div>
+                      <div className="font-medium">Tarihsel Veritabanı</div>
                       <div className="text-sm text-muted-foreground">10+ yıllık geçmiş verileri</div>
                     </div>
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium">Player Statistics</div>
+                      <div className="font-medium">Oyuncu İstatistikleri</div>
                       <div className="text-sm text-muted-foreground">Oyuncu performans metrikleri</div>
                     </div>
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium">Team Analytics</div>
+                      <div className="font-medium">Takım Analitiği / Takım Bazlı Analizler</div>
                       <div className="text-sm text-muted-foreground">Takım taktik analizleri</div>
                     </div>
                   </div>
@@ -404,7 +409,7 @@ const AIAnalytics = () => {
                     <div className="p-6 text-white">
                       <h3 className="text-lg font-semibold mb-2">Mikroservis Mimarisi</h3>
                       <p className="text-sm opacity-90">
-                        Ölçeklenebilir, hızlı ve güvenilir AI analiz sistemimiz
+                        Ölçeklenebilir, hızlı ve güvenilir AI analiz sistemi
                       </p>
                     </div>
                   </div>
