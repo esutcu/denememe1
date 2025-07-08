@@ -289,22 +289,20 @@ const Landing = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
-              size="lg" 
+              size="xl" 
               variant="secondary"
               onClick={() => navigate('/dashboard')}
-              className="text-lg px-8 py-3"
             >
               Ücretsiz Başla
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight />
             </Button>
             <Button 
-              size="lg" 
-              variant="outline"
+              size="xl" 
+              variant="outline-light"
               onClick={() => navigate('/about')}
-              className="text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-gray-800"
             >
               Daha Fazla Bilgi
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight />
             </Button>
           </div>
         </div>
