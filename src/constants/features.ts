@@ -8,12 +8,31 @@ export interface AIFeature {
   benefits: string[]
 }
 
+import dataAnalysisImg from '/images/card_data_analysis_3d.png';
+import mlAdvancedImg from '/images/card_ml_advanced.png';
+import strategyChessImg from '/images/card_strategy_chess.png';
+import deepLearningImg from '/images/card_deep_learning.png';
+import performanceTrackingImg from '/images/card_performance_tracking.png';
+import predictiveImg from '/images/card_predictive.png';
+import bigDataImg from '/images/card_big_data.png';
+import liveAnalysisImg from '/images/card_live_analysis.png';
+
+export interface AIFeature {
+  id: string
+  title: string
+  description: string
+  image: string
+  color: string
+  icon: string
+  benefits: string[]
+}
+
 export const aiFeatures: AIFeature[] = [
   {
     id: 'data-analysis',
     title: 'Veri Analizi',
     description: 'Kapsamlı futbol verilerini AI ile analiz ederek detaylı içgörüler sunuyoruz',
-    image: '/images/card_data_analysis_3d.png',
+    image: dataAnalysisImg,
     color: 'from-green-500 to-emerald-600',
     icon: '📊',
     benefits: [
@@ -26,7 +45,7 @@ export const aiFeatures: AIFeature[] = [
     id: 'machine-learning',
     title: 'Makine Öğrenimi',
     description: 'Gelişmiş ML algoritmaları ile maç sonuçlarını yüksek doğrulukla tahmin ediyoruz',
-    image: '/images/card_ml_advanced.png',
+    image: mlAdvancedImg,
     color: 'from-blue-500 to-purple-600',
     icon: '🧠',
     benefits: [
@@ -39,7 +58,7 @@ export const aiFeatures: AIFeature[] = [
     id: 'strategy-analysis',
     title: 'Strateji Analizi',
     description: 'Takım stratejilerini derinlemesine analiz ederek taktiksel öngörüler sağlıyoruz',
-    image: '/images/card_strategy_chess.png',
+    image: strategyChessImg,
     color: 'from-amber-500 to-orange-600',
     icon: '♟️',
     benefits: [
@@ -52,7 +71,7 @@ export const aiFeatures: AIFeature[] = [
     id: 'deep-learning',
     title: 'Derin Öğrenme',
     description: 'Neural network modelleri ile karmaşık futbol verilerini işleyip öngörüler üretiyoruz',
-    image: '/images/card_deep_learning.png',
+    image: deepLearningImg,
     color: 'from-cyan-500 to-blue-600',
     icon: '🔬',
     benefits: [
@@ -65,7 +84,7 @@ export const aiFeatures: AIFeature[] = [
     id: 'performance-tracking',
     title: 'Performans Takibi',
     description: 'Oyuncu ve takım performanslarını sürekli izleyerek gelişim önerilerinde bulunuyoruz',
-    image: '/images/card_performance_tracking.png',
+    image: performanceTrackingImg,
     color: 'from-red-500 to-pink-600',
     icon: '📈',
     benefits: [
@@ -78,7 +97,7 @@ export const aiFeatures: AIFeature[] = [
     id: 'predictive-analytics',
     title: 'Tahmin Analitiği',
     description: 'Gelecekteki maç sonuçlarını ve oyuncu performanslarını önceden tahmin ediyoruz',
-    image: '/images/card_predictive.png',
+    image: predictiveImg,
     color: 'from-purple-500 to-indigo-600',
     icon: '🔮',
     benefits: [
@@ -91,7 +110,7 @@ export const aiFeatures: AIFeature[] = [
     id: 'big-data',
     title: 'Büyük Veri',
     description: 'Milyonlarca veri noktasını işleyerek kapsamlı futbol analizleri gerçekleştiriyoruz',
-    image: '/images/card_big_data.png',
+    image: bigDataImg,
     color: 'from-gray-600 to-blue-600',
     icon: '🗄️',
     benefits: [
@@ -104,7 +123,7 @@ export const aiFeatures: AIFeature[] = [
     id: 'live-analysis',
     title: 'Canlı Analiz',
     description: 'Maçlar sırasında gerçek zamanlı analiz ve tahminler sunuyoruz',
-    image: '/images/card_live_analysis.png',
+    image: liveAnalysisImg,
     color: 'from-green-600 to-teal-600',
     icon: '⚡',
     benefits: [
