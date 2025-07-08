@@ -1,56 +1,59 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'https://hukcdmbaecwlfwtlrpxk.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1a2NkbWJhZWN3bGZ3dGxycHhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NjE4MzksImV4cCI6MjA2NzUzNzgzOX0.1qpyJOtLsg2wwYU5NkGGTiFeZzT2HbYBGlXGjBpLMRU'
+// Supabase configuration - hardcoded as per best practices
+const supabaseUrl = 'https://eyouisaqohhujtfwmktp.supabase.co'
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5b3Vpc2Fxb2hodWp0Zndta3RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NzExMzAsImV4cCI6MjA2NzU0NzEzMH0.pj9tFt_naBnEyXyCx3rOzK03gXWbitt6wK2LCO8BTGA'
 
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
-  },
-  db: {
-    schema: 'public'
-  },
-  global: {
-    headers: {
-      'x-my-custom-header': 'scoreresultsai'
-    }
-  }
-})
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Auth helper functions
-export const getCurrentUser = async () => {
+// Helper function to get current user
+export async function getCurrentUser() {
   const { data: { user }, error } = await supabase.auth.getUser()
-  if (error) throw error
+  if (error) {
+    console.error('Error getting user:', error)
+    return null
+  }
   return user
 }
 
-export const signOut = async () => {
+// Helper function for sign up with email redirect
+export async function signUp(email: string, password: string) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${window.location.protocol}//${window.location.host}/auth/callback`
+    }
+  })
+
+  if (error) {
+    console.error('Error signing up:', error.message)
+    throw error
+  }
+
+  return data
+}
+
+// Helper function for sign in
+export async function signIn(email: string, password: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({ 
+    email, 
+    password 
+  })
+  
+  if (error) {
+    console.error('Error signing in:', error.message)
+    throw error
+  }
+  
+  return data
+}
+
+// Helper function for sign out
+export async function signOut() {
   const { error } = await supabase.auth.signOut()
-  if (error) throw error
-}
-
-// Database helper functions
-export const getProfile = async (userId: string) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single()
-  
-  if (error) throw error
-  return data
-}
-
-export const updateProfile = async (userId: string, updates: any) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .update(updates)
-    .eq('id', userId)
-    .select()
-    .single()
-  
-  if (error) throw error
-  return data
+  if (error) {
+    console.error('Error signing out:', error.message)
+    throw error
+  }
 }

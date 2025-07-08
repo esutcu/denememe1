@@ -1,15 +1,16 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "../../lib/utils"
+
+import { cn } from "@/lib/utils"
 
 const alertVariants = cva(
-  "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
+  "relative w-full rounded-lg border border-zinc-200 px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-zinc-950 [&>svg~*]:pl-7 dark:border-zinc-800 dark:[&>svg]:text-zinc-50",
   {
     variants: {
       variant: {
-        default: "bg-background text-foreground",
+        default: "bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50",
         destructive:
-          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+          "border-red-500/50 text-red-500 dark:border-red-500 [&>svg]:text-red-500 dark:border-red-900/50 dark:text-red-900 dark:dark:border-red-900 dark:[&>svg]:text-red-900",
       },
     },
     defaultVariants: {
@@ -18,19 +19,30 @@ const alertVariants = cva(
   }
 )
 
-interface AlertProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof alertVariants> {}
-
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
-  ({ className, variant, ...props }, ref) => (
-    <div
-      ref={ref}
-      role="alert"
-      className={cn(alertVariants({ variant }), className)}
-      {...props}
-    />
-  )
-)
+const Alert = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
+>(({ className, variant, ...props }, ref) => (
+  <div
+    ref={ref}
+    role="alert"
+    className={cn(alertVariants({ variant }), className)}
+    {...props}
+  />
+))
 Alert.displayName = "Alert"
+
+const AlertTitle = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h5
+    ref={ref}
+    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
+    {...props}
+  />
+))
+AlertTitle.displayName = "AlertTitle"
 
 const AlertDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -44,4 +56,4 @@ const AlertDescription = React.forwardRef<
 ))
 AlertDescription.displayName = "AlertDescription"
 
-export { Alert, AlertDescription }
+export { Alert, AlertTitle, AlertDescription }
