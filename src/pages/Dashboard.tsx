@@ -109,29 +109,29 @@ const Dashboard = () => {
     }
   }
 
-  const handlePredictionSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!predictionForm.homeTeam || !predictionForm.awayTeam) {
-      toast.error('Ev sahibi ve deplasman takımları gerekli')
-      return
-    }
+// Dashboard.tsx içinde tahmin formu handling'i güncelleyin
 
-    const matchId = `custom_${Date.now()}`
-    const predictionResult = await getPrediction({
-      matchId,
-      homeTeam: predictionForm.homeTeam,
-      awayTeam: predictionForm.awayTeam,
-      leagueName: predictionForm.leagueName || 'Bilinmiyor',
-      matchDate: predictionForm.matchDate || new Date().toISOString()
-    })
-
-    if (predictionResult) {
-      setShowPredictionDialog(false)
-      setPredictionForm({ homeTeam: '', awayTeam: '', leagueName: '', matchDate: '' })
-      await loadUserLimits() // Limitleri güncelle
-    }
+const handlePredictionSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  
+  if (!predictionForm.homeTeam || !predictionForm.awayTeam) {
+    toast.error('Ev sahibi ve deplasman takımları gerekli')
+    return
   }
+
+  const predictionResult = await getPrediction({
+    homeTeam: predictionForm.homeTeam,
+    awayTeam: predictionForm.awayTeam,
+    leagueName: predictionForm.leagueName || 'Bilinmiyor',
+    matchDate: predictionForm.matchDate || new Date().toISOString()
+  })
+
+  if (predictionResult) {
+    setShowPredictionDialog(false)
+    setPredictionForm({ homeTeam: '', awayTeam: '', leagueName: '', matchDate: '' })
+    await loadUserLimits() // Limitleri güncelle
+  }
+}
 
   // Loading state
   if (authLoading) {
