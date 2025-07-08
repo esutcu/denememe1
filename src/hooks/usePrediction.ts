@@ -1,24 +1,65 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
-import { llmService, type PredictionRequest, type PredictionResult } from '../services/llmService'
 import { toast } from 'sonner'
 
-interface UserLimits {
-  canPredict: boolean
-  remainingPredictions: number
-  planType: string
-  dailyLimit: number
-  currentUsage: number
+interface PredictionRequest {
+  matchId?: string
+  homeTeam?: string
+  awayTeam?: string
+  leagueName?: string
+  matchDate?: string
 }
 
 interface PredictionResponse {
-  id: string
-  homeTeam: string
-  awayTeam: string
-  prediction: PredictionResult
-  source: 'cache' | 'fresh'
-  createdAt: string
+  data: {
+    id: string
+    match_id: string
+    home_team: string
+    away_team: string
+    league_name: string
+    match_date: string
+    llm_provider: string
+    llm_model: string
+    winner_prediction: 'HOME' | 'AWAY' | 'DRAW'
+    winner_confidence: number
+    goals_prediction: {
+      home: number
+      away: number
+      total: number
+    }
+    over_under_prediction: 'OVER' | 'UNDER'
+    over_under_confidence: number
+    analysis_text: string
+    risk_factors: string[]
+    key_stats: Record<string, any>
+    confidence_breakdown: {
+      home: number
+      draw: number
+      away: number
+    }
+    created_at: string
+  }
+  source: 'cache' | 'llm'
+  limits: {
+    userId: string
+    planType: string
+    dailyLimit: number
+    currentUsage: number
+    remainingPredictions: number
+    hasLimitReached: boolean
+    canMakePrediction: boolean
+  }
+}
+
+interface UserLimits {
+  userId: string
+  planType: string
+  dailyLimit: number
+  currentUsage: number
+  remainingPredictions: number
+  hasLimitReached: boolean
+  canMakePrediction: boolean
 }
 
 export function usePrediction() {
@@ -26,6 +67,7 @@ export function usePrediction() {
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null)
   const { user } = useAuth()
 
+  // Kullanıcı limitlerini kontrol et
   const checkUserLimits = async (): Promise<UserLimits | null> => {
     if (!user) {
       toast.error('Lütfen giriş yapın')
@@ -33,50 +75,35 @@ export function usePrediction() {
     }
 
     try {
-      // Get user profile
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-
-      if (error || !profile) {
-        console.error('Profile not found:', error)
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
+      
+      if (!accessToken) {
+        toast.error('Oturum süresi dolmuş, lütfen tekrar giriş yapın')
         return null
       }
 
-      // Reset daily usage if needed
-      const today = new Date().toISOString().split('T')[0]
-      if (profile.last_reset_date !== today) {
-        const { error: updateError } = await supabase
-          .from('profiles')
-          .update({
-            predictions_used_today: 0,
-            last_reset_date: today
-          })
-          .eq('id', user.id)
-        
-        if (!updateError) {
-          profile.predictions_used_today = 0
+      const { data, error } = await supabase.functions.invoke('user-limit-check', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
         }
+      })
+
+      if (error) {
+        console.error('Limit check error:', error)
+        toast.error('Limit kontrolünde hata oluştu')
+        return null
       }
 
-      const canPredict = profile.predictions_used_today < profile.daily_prediction_limit
-      const remaining = Math.max(0, profile.daily_prediction_limit - profile.predictions_used_today)
-
-      return {
-        canPredict,
-        remainingPredictions: remaining,
-        planType: profile.plan_type,
-        dailyLimit: profile.daily_prediction_limit,
-        currentUsage: profile.predictions_used_today
-      }
+      return data.limits as UserLimits
     } catch (error) {
-      console.error('Error checking user limits:', error)
+      console.error('Limit check failed:', error)
+      toast.error('Limit kontrolünde hata oluştu')
       return null
     }
   }
 
+  // Tahmin al (cache'den veya LLM'den)
   const getPrediction = async (request: PredictionRequest): Promise<PredictionResponse | null> => {
     if (!user) {
       toast.error('Lütfen giriş yapın')
@@ -85,117 +112,47 @@ export function usePrediction() {
 
     setLoading(true)
     try {
-      // Check user limits first
-      const limits = await checkUserLimits()
-      if (!limits || !limits.canPredict) {
-        toast.error(`Günlük limit aşıldı. Kalan: ${limits?.remainingPredictions || 0}`)
-        return null
-      }
-
-      // Try to find cached prediction first
-      let cachedPrediction = await llmService.findCachedPrediction(
-        request.homeTeam, 
-        request.awayTeam
-      )
-
-      if (cachedPrediction) {
-        const response: PredictionResponse = {
-          id: cachedPrediction.id,
-          homeTeam: request.homeTeam,
-          awayTeam: request.awayTeam,
-          prediction: {
-            homeWinProbability: cachedPrediction.home_win_probability,
-            drawProbability: cachedPrediction.draw_probability,
-            awayWinProbability: cachedPrediction.away_win_probability,
-            confidenceScore: cachedPrediction.confidence_score,
-            analysisSummary: cachedPrediction.analysis_summary,
-            keyFactors: cachedPrediction.key_factors,
-            riskLevel: cachedPrediction.risk_level
-          },
-          source: 'cache',
-          createdAt: cachedPrediction.created_at
-        }
-
-        setPrediction(response)
-        toast.success('Tahmin cache\'den alındı')
-        return response
-      }
-
-      // Generate fresh prediction
-      const freshPrediction = await llmService.generatePrediction(request)
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
       
-      if (!freshPrediction) {
-        toast.error('Tahmin oluşturulamadı, lütfen tekrar deneyin')
+      if (!accessToken) {
+        toast.error('Oturum süresi dolmuş, lütfen tekrar giriş yapın')
         return null
       }
 
-      // Create match fixture if not exists
-      const { data: existingMatch } = await supabase
-        .from('match_fixtures')
-        .select('id')
-        .eq('home_team', request.homeTeam)
-        .eq('away_team', request.awayTeam)
-        .single()
+      console.log('🎯 Requesting prediction:', request)
 
-      let matchId = existingMatch?.id
-
-      if (!matchId) {
-        const { data: newMatch, error: matchError } = await supabase
-          .from('match_fixtures')
-          .insert({
-            external_match_id: `custom_${Date.now()}`,
-            home_team: request.homeTeam,
-            away_team: request.awayTeam,
-            league_name: request.leagueName || 'Bilinmiyor',
-            match_date: request.matchDate || new Date().toISOString(),
-            status: 'scheduled'
-          })
-          .select('id')
-          .single()
-
-        if (matchError) {
-          console.error('Error creating match fixture:', matchError)
-          return null
+      const { data, error } = await supabase.functions.invoke('get-match-prediction', {
+        body: request,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
         }
-        matchId = newMatch.id
+      })
+
+      if (error) {
+        console.error('Prediction error:', error)
+        toast.error(`Tahmin alınırken hata oluştu: ${error.message}`)
+        return null
       }
 
-      // Store prediction in cache
-      const { data: providers } = await supabase
-        .from('llm_providers')
-        .select('id')
-        .eq('status', 'active')
-        .order('priority')
-        .limit(1)
-        .single()
-
-      if (providers) {
-        await llmService.storePrediction(matchId, providers.id, freshPrediction)
+      if (!data.success) {
+        toast.error(data.error || 'Tahmin alınamadı')
+        return null
       }
 
-      // Update user usage
-      await supabase
-        .from('profiles')
-        .update({
-          predictions_used_today: limits.currentUsage + 1
-        })
-        .eq('id', user.id)
+      const predictionData = data as PredictionResponse
+      setPrediction(predictionData)
 
-      const response: PredictionResponse = {
-        id: matchId,
-        homeTeam: request.homeTeam,
-        awayTeam: request.awayTeam,
-        prediction: freshPrediction,
-        source: 'fresh',
-        createdAt: new Date().toISOString()
-      }
+      // Başarı mesajı
+      const sourceText = predictionData.source === 'cache' 
+        ? '⚡ Cache\'den alındı' 
+        : '🧠 Yeni tahmin oluşturuldu'
+      
+      toast.success(`${sourceText} - Kalan: ${predictionData.limits.remainingPredictions}`)
 
-      setPrediction(response)
-      toast.success('Yeni tahmin oluşturuldu!')
-      return response
-
+      return predictionData
     } catch (error) {
-      console.error('Prediction error:', error)
+      console.error('Get prediction failed:', error)
       toast.error('Tahmin alınırken hata oluştu')
       return null
     } finally {
@@ -203,10 +160,117 @@ export function usePrediction() {
     }
   }
 
+  // Hızlı tahmin alma - match ID ile
+  const getPredictionByMatchId = async (matchId: string): Promise<PredictionResponse | null> => {
+    return await getPrediction({ matchId })
+  }
+
+  // Takım isimleri ile tahmin alma
+  const getPredictionByTeams = async (
+    homeTeam: string, 
+    awayTeam: string, 
+    leagueName?: string, 
+    matchDate?: string
+  ): Promise<PredictionResponse | null> => {
+    return await getPrediction({
+      homeTeam,
+      awayTeam,
+      leagueName,
+      matchDate
+    })
+  }
+
+  // Kullanım istatistikleri al
+  const getUsageStats = async (): Promise<any> => {
+    if (!user) return null
+
+    try {
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
+      
+      if (!accessToken) return null
+
+      const { data, error } = await supabase.functions.invoke('user-usage-stats', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      if (error) {
+        console.error('Usage stats error:', error)
+        return null
+      }
+
+      return data
+    } catch (error) {
+      console.error('Get usage stats failed:', error)
+      return null
+    }
+  }
+
+  // Cache durumunu kontrol et
+  const checkCacheStatus = async (matchId: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase
+        .from('match_predictions')
+        .select('id')
+        .eq('match_id', matchId)
+        .gt('cache_expires_at', new Date().toISOString())
+        .single()
+
+      return !error && !!data
+    } catch (error) {
+      return false
+    }
+  }
+
+  // Prediction formatting helpers
+  const formatConfidence = (confidence: number): string => {
+    if (confidence >= 80) return 'Çok Güvenli'
+    if (confidence >= 60) return 'Güvenli'
+    if (confidence >= 40) return 'Orta'
+    return 'Düşük Güven'
+  }
+
+  const formatPredictionText = (prediction: PredictionResponse['data']): string => {
+    const winnerText = prediction.winner_prediction === 'HOME' 
+      ? prediction.home_team 
+      : prediction.winner_prediction === 'AWAY' 
+        ? prediction.away_team 
+        : 'Beraberlik'
+    
+    return `${winnerText} (%${prediction.winner_confidence} güven)`
+  }
+
+  const getRiskLevel = (riskFactors: string[]): 'low' | 'medium' | 'high' => {
+    if (riskFactors.length >= 3) return 'high'
+    if (riskFactors.length >= 2) return 'medium'
+    return 'low'
+  }
+
+  const getRiskColor = (risk: 'low' | 'medium' | 'high'): string => {
+    switch (risk) {
+      case 'low': return 'text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-300'
+      case 'medium': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900 dark:text-yellow-300'
+      case 'high': return 'text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-300'
+    }
+  }
+
   return {
     loading,
     prediction,
+    setPrediction,
     getPrediction,
-    checkUserLimits
+    getPredictionByMatchId,
+    getPredictionByTeams,
+    checkUserLimits,
+    getUsageStats,
+    checkCacheStatus,
+    
+    // Helper functions
+    formatConfidence,
+    formatPredictionText,
+    getRiskLevel,
+    getRiskColor
   }
 }
