@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
@@ -7,8 +6,8 @@ import { ArrowRight, TrendingUp, Users, Trophy, Target, Star } from 'lucide-reac
 import { leagues } from '../constants/leagues'
 import { aiFeatures } from '../constants/features'
 
-const headerMainPanoramic = './images/header_main_panoramic.png'
-const headerMinimal = './images/header_minimal.png'
+const headerMainPanoramic = '/denememe/images/header_main_panoramic.png'
+const headerMinimal = '/denememe/images/header_minimal.png'
 
 const Landing = () => {
   const navigate = useNavigate()
