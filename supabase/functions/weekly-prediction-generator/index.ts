@@ -1,437 +1,498 @@
-// supabase/functions/weekly-prediction-generator/index.ts
-// CORE SYSTEM: Haftalık LLM Batch Processing + Cache
-
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { serve } from 'https://deno.land/std@0.208.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { LLMService } from '../shared/llmService.ts'
 
-interface FootballFixture {
+// API-Football configuration
+const API_FOOTBALL_BASE_URL = 'https://api-football-v1.p.rapidapi.com/v3'
+
+interface Fixture {
   fixture: {
     id: number
     date: string
-    status: {
-      short: string // 'NS' = Not Started
-    }
-  }
-  teams: {
-    home: {
-      id: number
-      name: string
-    }
-    away: {
-      id: number
-      name: string
-    }
+    status: { short: string }
   }
   league: {
     id: number
     name: string
-    season: number
+    country: string
+  }
+  teams: {
+    home: { id: number; name: string }
+    away: { id: number; name: string }
   }
 }
 
-interface TeamForm {
-  team: {
-    id: number
-    name: string
-  }
-  form: string // "WDLWW"
-  fixtures: Array<{
-    fixture: {
-      date: string
-    }
-    teams: {
-      home: { name: string }
-      away: { name: string }
-    }
-    goals: {
-      home: number
-      away: number
-    }
-  }>
+interface TeamStats {
+  team_id: number
+  team_name: string
+  last_5_matches: any[]
+  season_stats: any
+  injuries: any[]
 }
 
-class WeeklyPredictionGenerator {
-  private supabase
-  private llmService: LLMService
-  private apiFootballKey: string
-  private apiFootballHost = 'v3.football.api-sports.io'
+interface BatchJob {
+  id: string
+  job_type: string
+  status: string
+  config: any
+}
 
-  constructor() {
-    this.supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
-    this.llmService = new LLMService()
-    this.apiFootballKey = Deno.env.get('API_FOOTBALL_KEY') ?? ''
-  }
+// Major leagues to process (expandable)
+const SUPPORTED_LEAGUES = [
+  { id: 39, name: 'Premier League', country: 'England' },
+  { id: 203, name: 'Süper Lig', country: 'Turkey' },
+  { id: 78, name: 'Bundesliga', country: 'Germany' },
+  { id: 135, name: 'Serie A', country: 'Italy' },
+  { id: 140, name: 'LaLiga', country: 'Spain' },
+  { id: 61, name: 'Ligue 1', country: 'France' },
+  { id: 2, name: 'Champions League', country: 'Europe' },
+  { id: 3, name: 'Europa League', country: 'Europe' }
+]
 
-  // Ana haftalık batch işlemi
-  async generateWeeklyPredictions(): Promise<{ success: boolean; processed: number; errors: string[] }> {
-    console.log('🚀 Starting weekly prediction generation...')
-    
-    const results = {
-      success: true,
-      processed: 0,
-      errors: [] as string[]
-    }
-
+// Fetch fixtures for the upcoming week
+async function fetchWeeklyFixtures(apiKey: string): Promise<Fixture[]> {
+  const today = new Date()
+  const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
+  
+  const dateFrom = today.toISOString().split('T')[0]
+  const dateTo = nextWeek.toISOString().split('T')[0]
+  
+  const allFixtures: Fixture[] = []
+  
+  for (const league of SUPPORTED_LEAGUES) {
     try {
-      // 1. Bu haftaki maçları çek
-      const fixtures = await this.fetchWeeklyFixtures()
-      console.log(`📅 Found ${fixtures.length} matches for this week`)
-
-      // 2. Her maç için tahmin üret
-      for (const fixture of fixtures) {
-        try {
-          await this.processSingleMatch(fixture)
-          results.processed++
-          console.log(`✅ Processed: ${fixture.teams.home.name} vs ${fixture.teams.away.name}`)
-        } catch (error) {
-          const errorMsg = `❌ Failed to process ${fixture.teams.home.name} vs ${fixture.teams.away.name}: ${error.message}`
-          console.error(errorMsg)
-          results.errors.push(errorMsg)
+      console.log(`Fetching fixtures for ${league.name} (${league.id})`)
+      
+      const response = await fetch(
+        `${API_FOOTBALL_BASE_URL}/fixtures?league=${league.id}&season=2025&from=${dateFrom}&to=${dateTo}`,
+        {
+          headers: {
+            'X-RapidAPI-Key': apiKey,
+            'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+          }
         }
-
-        // Rate limiting - API call'lar arası bekleme
-        await this.sleep(1000) // 1 saniye bekle
+      )
+      
+      if (!response.ok) {
+        console.error(`API-Football error for league ${league.id}:`, response.status)
+        continue
       }
-
-      // 3. Eski cache'leri temizle
-      await this.cleanupExpiredCache()
-
-      console.log(`🎉 Weekly batch completed: ${results.processed} processed, ${results.errors.length} errors`)
+      
+      const data = await response.json()
+      
+      if (data.response && Array.isArray(data.response)) {
+        // Filter only upcoming matches
+        const upcomingFixtures = data.response.filter((fixture: Fixture) => 
+          fixture.fixture.status.short === 'NS' // Not Started
+        )
+        
+        allFixtures.push(...upcomingFixtures)
+        console.log(`Found ${upcomingFixtures.length} upcoming fixtures for ${league.name}`)
+      }
+      
+      // Rate limiting - API-Football has limits
+      await new Promise(resolve => setTimeout(resolve, 200))
       
     } catch (error) {
-      console.error('💥 Weekly batch failed:', error)
-      results.success = false
-      results.errors.push(error.message)
+      console.error(`Error fetching ${league.name} fixtures:`, error)
     }
-
-    return results
   }
+  
+  console.log(`Total fixtures found: ${allFixtures.length}`)
+  return allFixtures
+}
 
-  // API-Football'dan bu haftaki maçları çek
-  private async fetchWeeklyFixtures(): Promise<FootballFixture[]> {
-    const today = new Date()
-    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
-    
-    const from = today.toISOString().split('T')[0]
-    const to = nextWeek.toISOString().split('T')[0]
-
-    // Öncelikli ligler
-    const priorityLeagues = [
-      39,  // Premier League
-      140, // La Liga  
-      78,  // Bundesliga
-      135, // Serie A
-      61,  // Ligue 1
-      203, // Süper Lig
-      2    // Champions League
-    ]
-
-    const allFixtures: FootballFixture[] = []
-
-    for (const leagueId of priorityLeagues) {
-      try {
-        const fixtures = await this.fetchFixturesForLeague(leagueId, from, to)
-        allFixtures.push(...fixtures)
-        console.log(`📊 League ${leagueId}: ${fixtures.length} fixtures`)
-        
-        // Rate limiting
-        await this.sleep(500)
-      } catch (error) {
-        console.error(`Failed to fetch league ${leagueId}:`, error)
+// Fetch team statistics and recent form
+async function fetchTeamData(teamId: number, leagueId: number, apiKey: string): Promise<TeamStats | null> {
+  try {
+    // Get last 5 matches
+    const fixturesResponse = await fetch(
+      `${API_FOOTBALL_BASE_URL}/fixtures?team=${teamId}&last=5`,
+      {
+        headers: {
+          'X-RapidAPI-Key': apiKey,
+          'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+        }
       }
-    }
-
-    return allFixtures.filter(f => f.fixture.status.short === 'NS') // Sadece oynanmamış maçlar
-  }
-
-  private async fetchFixturesForLeague(leagueId: number, from: string, to: string): Promise<FootballFixture[]> {
-    const url = `https://${this.apiFootballHost}/fixtures?league=${leagueId}&from=${from}&to=${to}&season=2024`
+    )
     
-    const response = await fetch(url, {
-      headers: {
-        'X-RapidAPI-Key': this.apiFootballKey,
-        'X-RapidAPI-Host': this.apiFootballHost
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error(`API-Football error: ${response.status}`)
+    let last5Matches = []
+    if (fixturesResponse.ok) {
+      const fixturesData = await fixturesResponse.json()
+      last5Matches = fixturesData.response?.slice(0, 5) || []
     }
-
-    const data = await response.json()
-    return data.response || []
+    
+    await new Promise(resolve => setTimeout(resolve, 200))
+    
+    // Get team statistics
+    const statsResponse = await fetch(
+      `${API_FOOTBALL_BASE_URL}/teams/statistics?league=${leagueId}&season=2025&team=${teamId}`,
+      {
+        headers: {
+          'X-RapidAPI-Key': apiKey,
+          'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+        }
+      }
+    )
+    
+    let seasonStats = {}
+    if (statsResponse.ok) {
+      const statsData = await statsResponse.json()
+      seasonStats = statsData.response || {}
+    }
+    
+    await new Promise(resolve => setTimeout(resolve, 200))
+    
+    // Get injuries
+    const injuriesResponse = await fetch(
+      `${API_FOOTBALL_BASE_URL}/injuries?team=${teamId}`,
+      {
+        headers: {
+          'X-RapidAPI-Key': apiKey,
+          'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+        }
+      }
+    )
+    
+    let injuries = []
+    if (injuriesResponse.ok) {
+      const injuriesData = await injuriesResponse.json()
+      injuries = injuriesData.response?.slice(0, 10) || [] // Limit to 10 injuries
+    }
+    
+    return {
+      team_id: teamId,
+      team_name: '', // Will be filled from fixture data
+      last_5_matches: last5Matches,
+      season_stats: seasonStats,
+      injuries: injuries
+    }
+    
+  } catch (error) {
+    console.error(`Error fetching team data for ${teamId}:`, error)
+    return null
   }
+}
 
-  // Tek maç için tahmin üret
-  private async processSingleMatch(fixture: FootballFixture): Promise<void> {
-    const matchId = fixture.fixture.id.toString()
-    const homeTeam = fixture.teams.home.name
-    const awayTeam = fixture.teams.away.name
-
-    // Cache'de zaten var mı kontrol et
-    const { data: existingPrediction } = await this.supabase
+// Process single fixture and generate prediction
+async function processFixture(
+  fixture: Fixture, 
+  supabase: any, 
+  apiKey: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const matchId = `api_${fixture.fixture.id}`
+    
+    // Check if prediction already exists and is still valid
+    const { data: existingPrediction } = await supabase
       .from('match_predictions')
       .select('id')
       .eq('match_id', matchId)
-      .eq('llm_provider', 'OpenRouter_Primary')
+      .eq('is_active', true)
+      .gt('cache_expires_at', new Date().toISOString())
       .single()
-
-    if (existingPrediction) {
-      console.log(`⏭️  Skipping ${homeTeam} vs ${awayTeam} - already cached`)
-      return
-    }
-
-    // Takım verilerini topla
-    const [homeForm, awayForm, h2hData] = await Promise.all([
-      this.getTeamForm(fixture.teams.home.id),
-      this.getTeamForm(fixture.teams.away.id),
-      this.getHeadToHead(fixture.teams.home.id, fixture.teams.away.id)
-    ])
-
-    // LLM ile tahmin üret
-    const matchData = {
-      homeTeam,
-      awayTeam,
-      leagueName: fixture.league.name,
-      matchDate: fixture.fixture.date,
-      homeTeamForm: this.parseFormString(homeForm?.form || 'NNNNN'),
-      awayTeamForm: this.parseFormString(awayForm?.form || 'NNNNN'),
-      headToHead: h2hData,
-      homeTeamStats: await this.getTeamStats(fixture.teams.home.id),
-      awayTeamStats: await this.getTeamStats(fixture.teams.away.id)
-    }
-
-    const prediction = await this.llmService.generateConsensusPredict(matchData)
-
-    // Cache'e kaydet
-    await this.savePredictionToCache(matchId, matchData, prediction)
-  }
-
-  // Takım formu çek (son 5 maç)
-  private async getTeamForm(teamId: number): Promise<TeamForm | null> {
-    try {
-      const url = `https://${this.apiFootballHost}/fixtures?team=${teamId}&last=5&season=2024`
-      
-      const response = await fetch(url, {
-        headers: {
-          'X-RapidAPI-Key': this.apiFootballKey,
-          'X-RapidAPI-Host': this.apiFootballHost
-        }
-      })
-
-      if (!response.ok) return null
-
-      const data = await response.json()
-      const fixtures = data.response || []
-
-      // Form string oluştur
-      let form = ''
-      for (const fixture of fixtures.slice(-5)) {
-        const isHome = fixture.teams.home.id === teamId
-        const teamScore = isHome ? fixture.goals.home : fixture.goals.away
-        const oppScore = isHome ? fixture.goals.away : fixture.goals.home
-
-        if (teamScore > oppScore) form += 'W'
-        else if (teamScore < oppScore) form += 'L'
-        else form += 'D'
-      }
-
-      return {
-        team: { id: teamId, name: '' },
-        form,
-        fixtures: fixtures.slice(-5)
-      }
-    } catch (error) {
-      console.error(`Failed to get team form for ${teamId}:`, error)
-      return null
-    }
-  }
-
-  // Head-to-head geçmişi
-  private async getHeadToHead(homeTeamId: number, awayTeamId: number): Promise<any[]> {
-    try {
-      const url = `https://${this.apiFootballHost}/fixtures/headtohead?h2h=${homeTeamId}-${awayTeamId}&last=3`
-      
-      const response = await fetch(url, {
-        headers: {
-          'X-RapidAPI-Key': this.apiFootballKey,
-          'X-RapidAPI-Host': this.apiFootballHost
-        }
-      })
-
-      if (!response.ok) return []
-
-      const data = await response.json()
-      const fixtures = data.response || []
-
-      return fixtures.map((f: any) => {
-        const homeScore = f.goals.home
-        const awayScore = f.goals.away
-        let result: 'home' | 'away' | 'draw'
-        
-        if (homeScore > awayScore) result = 'home'
-        else if (homeScore < awayScore) result = 'away'
-        else result = 'draw'
-
-        return {
-          date: f.fixture.date.split('T')[0],
-          homeScore,
-          awayScore,
-          result
-        }
-      })
-    } catch (error) {
-      console.error(`Failed to get H2H for ${homeTeamId} vs ${awayTeamId}:`, error)
-      return []
-    }
-  }
-
-  // Takım istatistikleri
-  private async getTeamStats(teamId: number): Promise<any> {
-    // Basit mock stats - gerçek implementasyonda API'den çekilir
-    return {
-      goalsFor: Math.floor(Math.random() * 30) + 20,
-      goalsAgainst: Math.floor(Math.random() * 20) + 10,
-      position: Math.floor(Math.random() * 20) + 1,
-      points: Math.floor(Math.random() * 40) + 20
-    }
-  }
-
-  // Tahmini cache'e kaydet
-  private async savePredictionToCache(
-    matchId: string, 
-    matchData: any, 
-    prediction: any
-  ): Promise<void> {
-    const { error } = await this.supabase
-      .from('match_predictions')
-      .insert({
-        match_id: matchId,
-        home_team: matchData.homeTeam,
-        away_team: matchData.awayTeam,
-        league_name: matchData.leagueName,
-        match_date: matchData.matchDate,
-        llm_provider: 'OpenRouter_Primary',
-        llm_model: 'deepseek/deepseek-r1',
-        winner_prediction: prediction.winner_prediction,
-        winner_confidence: prediction.winner_confidence,
-        goals_prediction: prediction.goals_prediction,
-        over_under_prediction: prediction.over_under_prediction,
-        over_under_confidence: prediction.over_under_confidence,
-        analysis_text: prediction.analysis_text,
-        risk_factors: prediction.risk_factors,
-        key_stats: prediction.key_stats,
-        confidence_breakdown: prediction.confidence_breakdown,
-        input_data: matchData,
-        cache_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 gün
-      })
-
-    if (error) {
-      throw new Error(`Failed to save prediction: ${error.message}`)
-    }
-  }
-
-  // Utility functions
-  private parseFormString(form: string): string[] {
-    return form.split('')
-  }
-
-  private async sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
-
-  // Eski cache'leri temizle
-  private async cleanupExpiredCache(): Promise<void> {
-    console.log('🧹 Cleaning up expired cache...')
     
-    const { error } = await this.supabase
-      .from('match_predictions')
-      .delete()
-      .lt('cache_expires_at', new Date().toISOString())
-
-    if (error) {
-      console.error('Failed to cleanup cache:', error)
-    } else {
-      console.log('✅ Cache cleanup completed')
+    if (existingPrediction) {
+      console.log(`Prediction already exists for match ${matchId}`)
+      return { success: true }
     }
+    
+    // Fetch team data
+    console.log(`Fetching data for ${fixture.teams.home.name} vs ${fixture.teams.away.name}`)
+    
+    const [homeTeamData, awayTeamData] = await Promise.all([
+      fetchTeamData(fixture.teams.home.id, fixture.league.id, apiKey),
+      fetchTeamData(fixture.teams.away.id, fixture.league.id, apiKey)
+    ])
+    
+    // Prepare match data for LLM
+    const matchData = {
+      match_id: matchId,
+      home_team: fixture.teams.home.name,
+      away_team: fixture.teams.away.name,
+      league_name: fixture.league.name,
+      match_date: fixture.fixture.date,
+      home_last_5: homeTeamData?.last_5_matches?.map(match => ({
+        result: match.teams.home.id === fixture.teams.home.id 
+          ? (match.goals.home > match.goals.away ? 'W' : match.goals.home === match.goals.away ? 'D' : 'L')
+          : (match.goals.away > match.goals.home ? 'W' : match.goals.away === match.goals.home ? 'D' : 'L'),
+        goals_for: match.teams.home.id === fixture.teams.home.id ? match.goals.home : match.goals.away,
+        goals_against: match.teams.home.id === fixture.teams.home.id ? match.goals.away : match.goals.home,
+        opponent: match.teams.home.id === fixture.teams.home.id ? match.teams.away.name : match.teams.home.name
+      })) || [],
+      away_last_5: awayTeamData?.last_5_matches?.map(match => ({
+        result: match.teams.away.id === fixture.teams.away.id 
+          ? (match.goals.away > match.goals.home ? 'W' : match.goals.away === match.goals.home ? 'D' : 'L')
+          : (match.goals.home > match.goals.away ? 'W' : match.goals.home === match.goals.away ? 'D' : 'L'),
+        goals_for: match.teams.away.id === fixture.teams.away.id ? match.goals.away : match.goals.home,
+        goals_against: match.teams.away.id === fixture.teams.away.id ? match.goals.home : match.goals.away,
+        opponent: match.teams.away.id === fixture.teams.away.id ? match.teams.home.name : match.teams.away.name
+      })) || [],
+      head_to_head: [], // TODO: Fetch H2H data
+      league_stats: {
+        home_team_stats: homeTeamData?.season_stats || {},
+        away_team_stats: awayTeamData?.season_stats || {},
+        home_injuries: homeTeamData?.injuries || [],
+        away_injuries: awayTeamData?.injuries || []
+      }
+    }
+    
+    // Call LLM processor
+    console.log(`Generating prediction for ${fixture.teams.home.name} vs ${fixture.teams.away.name}`)
+    
+    const llmResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/llm-query-processor`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ matchData })
+    })
+    
+    if (!llmResponse.ok) {
+      const errorText = await llmResponse.text()
+      console.error(`LLM processor failed for match ${matchId}:`, llmResponse.status, errorText)
+      return { success: false, error: `LLM failed: ${errorText}` }
+    }
+    
+    const llmResult = await llmResponse.json()
+    
+    if (!llmResult.success) {
+      console.error(`LLM prediction failed for match ${matchId}:`, llmResult.error)
+      return { success: false, error: llmResult.error }
+    }
+    
+    console.log(`Successfully generated prediction for ${matchId}`)
+    return { success: true }
+    
+  } catch (error) {
+    console.error(`Error processing fixture ${fixture.fixture.id}:`, error)
+    return { success: false, error: error.message }
   }
 }
 
-// Edge Function Handler
+// Clean up expired cache entries
+async function cleanupExpiredCache(supabase: any): Promise<number> {
+  const { data, error } = await supabase
+    .from('match_predictions')
+    .update({ is_active: false })
+    .lt('cache_expires_at', new Date().toISOString())
+    .eq('is_active', true)
+    .select('id')
+  
+  if (error) {
+    console.error('Failed to cleanup expired cache:', error)
+    return 0
+  }
+  
+  console.log(`Cleaned up ${data?.length || 0} expired cache entries`)
+  return data?.length || 0
+}
+
+// Main batch processing function
 serve(async (req) => {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  }
-
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
-
   try {
-    // Auth check - sadece servis rolü veya admin
-    const authHeader = req.headers.get('Authorization')
-    if (!authHeader || !authHeader.includes('Bearer')) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+    // Handle CORS
+    if (req.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+          'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+        },
+      })
     }
 
-    const generator = new WeeklyPredictionGenerator()
-    const result = await generator.generateWeeklyPredictions()
+    if (req.method !== 'POST') {
+      return new Response('Method not allowed', { status: 405 })
+    }
 
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        data: result,
-        timestamp: new Date().toISOString()
-      }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+    // Get API-Football key
+    const apiFootballKey = Deno.env.get('API_FOOTBALL_KEY')
+    if (!apiFootballKey) {
+      return new Response('API-Football key not configured', { status: 500 })
+    }
+
+    // Create batch job record
+    const { data: batchJob, error: jobError } = await supabase
+      .from('batch_jobs')
+      .insert({
+        job_type: 'weekly_predictions',
+        status: 'running',
+        config: {
+          leagues: SUPPORTED_LEAGUES.map(l => l.id),
+          triggered_by: 'manual' // or 'cron'
+        },
+        started_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+
+    if (jobError) {
+      console.error('Failed to create batch job:', jobError)
+      return new Response('Failed to create batch job', { status: 500 })
+    }
+
+    console.log(`Starting weekly batch job ${batchJob.id}`)
+
+    let processedItems = 0
+    let successfulItems = 0
+    let failedItems = 0
+    const errors: string[] = []
+
+    try {
+      // Step 1: Clean up expired cache
+      const cleanedUp = await cleanupExpiredCache(supabase)
+      console.log(`Cleaned up ${cleanedUp} expired entries`)
+
+      // Step 2: Fetch upcoming fixtures
+      console.log('Fetching upcoming fixtures...')
+      const fixtures = await fetchWeeklyFixtures(apiFootballKey)
+      
+      if (fixtures.length === 0) {
+        console.log('No upcoming fixtures found')
+        
+        // Update job as completed
+        await supabase
+          .from('batch_jobs')
+          .update({
+            status: 'completed',
+            completed_at: new Date().toISOString(),
+            processed_items: 0,
+            successful_items: 0,
+            failed_items: 0
+          })
+          .eq('id', batchJob.id)
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: 'No fixtures to process',
+            job_id: batchJob.id,
+            stats: { processed: 0, successful: 0, failed: 0 }
+          }),
+          {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*'
+            }
+          }
+        )
       }
-    )
+
+      console.log(`Processing ${fixtures.length} fixtures...`)
+
+      // Step 3: Process each fixture
+      for (const fixture of fixtures) {
+        processedItems++
+        
+        const result = await processFixture(fixture, supabase, apiFootballKey)
+        
+        if (result.success) {
+          successfulItems++
+        } else {
+          failedItems++
+          if (result.error) {
+            errors.push(`${fixture.teams.home.name} vs ${fixture.teams.away.name}: ${result.error}`)
+          }
+        }
+
+        // Update progress periodically
+        if (processedItems % 10 === 0) {
+          await supabase
+            .from('batch_jobs')
+            .update({
+              processed_items: processedItems,
+              successful_items: successfulItems,
+              failed_items: failedItems,
+              errors: errors
+            })
+            .eq('id', batchJob.id)
+          
+          console.log(`Progress: ${processedItems}/${fixtures.length} processed`)
+        }
+
+        // Rate limiting to avoid overwhelming APIs
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      }
+
+      // Final job update
+      await supabase
+        .from('batch_jobs')
+        .update({
+          status: 'completed',
+          completed_at: new Date().toISOString(),
+          processed_items: processedItems,
+          successful_items: successfulItems,
+          failed_items: failedItems,
+          errors: errors
+        })
+        .eq('id', batchJob.id)
+
+      console.log(`Batch job completed. Processed: ${processedItems}, Success: ${successfulItems}, Failed: ${failedItems}`)
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          job_id: batchJob.id,
+          message: 'Weekly predictions generated successfully',
+          stats: {
+            processed: processedItems,
+            successful: successfulItems,
+            failed: failedItems,
+            cleanedUp
+          },
+          errors: errors.slice(0, 10) // Limit error list
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        }
+      )
+
+    } catch (batchError) {
+      console.error('Batch processing error:', batchError)
+      
+      // Update job as failed
+      await supabase
+        .from('batch_jobs')
+        .update({
+          status: 'failed',
+          completed_at: new Date().toISOString(),
+          processed_items: processedItems,
+          successful_items: successfulItems,
+          failed_items: failedItems,
+          errors: [...errors, batchError.message]
+        })
+        .eq('id', batchJob.id)
+
+      throw batchError
+    }
 
   } catch (error) {
-    console.error('Function error:', error)
+    console.error('Weekly Prediction Generator Error:', error)
     
     return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message,
-        timestamp: new Date().toISOString()
+      JSON.stringify({
+        success: false,
+        error: error.message || 'Internal server error'
       }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
       }
     )
   }
 })
-
-/* 
-DEPLOYMENT NOTES:
-
-1. Bu function'ı deploy etmek için:
-   supabase functions deploy weekly-prediction-generator
-
-2. Cron job kurmak için Supabase Dashboard > Database > Cron Jobs:
-   SELECT cron.schedule('weekly-predictions', '0 9 * * 1', 'SELECT net.http_post(
-     url:=''https://your-project.supabase.co/functions/v1/weekly-prediction-generator'',
-     headers:=''{"Authorization": "Bearer YOUR_SERVICE_KEY"}''::jsonb
-   ) as request_id;');
-
-3. Manuel tetikleme için:
-   curl -X POST https://your-project.supabase.co/functions/v1/weekly-prediction-generator \
-   -H "Authorization: Bearer YOUR_SERVICE_KEY"
-
-4. Environment variables gerekli:
-   - SUPABASE_URL
-   - SUPABASE_SERVICE_ROLE_KEY  
-   - OPENROUTER_API_KEY_1-4
-   - API_FOOTBALL_KEY
-*/
