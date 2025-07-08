@@ -86,8 +86,8 @@ const Landing = () => {
           </h1>
           
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            OpenRouter LLM modelleri ve API-Football verileri ile desteklenen gelişmiş tahmin sistemi. 
-            180+ ligden gerçek zamanlı verilerle %78+ doğruluk oranı.
+            LLM modelleri ve API-Football verileri ile desteklenen gelişmiş tahmin sistemi. 
+            20+ ligden gerçek zamanlı verilerle %68+ doğruluk oranı.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -207,7 +207,7 @@ const Landing = () => {
               Desteklenen Ligler
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Dünyaçapında 180+ ligden gerçek zamanlı veriler
+              Dünyaçapında 20+ ligden gerçek zamanlı veriler
             </p>
           </div>
           

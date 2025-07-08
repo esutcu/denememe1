@@ -42,7 +42,7 @@ export const leagues: League[] = [
   },
   {
     id: 'serie-a',
-    name: 'Serie A',
+    name: 'Seri A',
     country: 'İtalya',
     logo: '/images/serie_a_pro.png',
     color: 'from-green-600 to-red-600',
@@ -58,7 +58,7 @@ export const leagues: League[] = [
   },
   {
     id: 'ligue-1',
-    name: 'Ligue 1',
+    name: 'Lig 1',
     country: 'Fransa',
     logo: '/images/ligue_1_pro.png',
     color: 'from-blue-600 to-red-600',
