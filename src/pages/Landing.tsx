@@ -6,34 +6,35 @@ import { Badge } from '../components/ui/badge'
 import { ArrowRight, TrendingUp, Users, Trophy, Target, Star } from 'lucide-react'
 import { leagues } from '../constants/leagues'
 import { aiFeatures } from '../constants/features'
-import headerMainPanoramic from '/images/header_main_panoramic.png';
-import headerMinimal from '/images/header_minimal.png';
+
+const headerMainPanoramic = './images/header_main_panoramic.png'
+const headerMinimal = './images/header_minimal.png'
 
 const Landing = () => {
   const navigate = useNavigate()
 
   const stats = [
-    { 
-      label: 'Aktif Kullanıcı', 
-      value: '2,500+', 
+    {
+      label: 'Aktif Kullanıcı',
+      value: '2,500+',
       icon: Users,
       color: 'text-blue-500'
     },
-    { 
-      label: 'Tahmin Doğruluğu', 
-      value: '%68', 
+    {
+      label: 'Tahmin Doğruluğu',
+      value: '%68',
       icon: Target,
       color: 'text-green-500'
     },
-    { 
-      label: 'Desteklenen Lig', 
-      value: '180+', 
+    {
+      label: 'Desteklenen Lig',
+      value: '180+',
       icon: Trophy,
       color: 'text-purple-500'
     },
-    { 
-      label: 'Günlük Tahmin', 
-      value: '500+', 
+    {
+      label: 'Günlük Tahmin',
+      value: '500+',
       icon: TrendingUp,
       color: 'text-orange-500'
     }
@@ -66,7 +67,7 @@ const Landing = () => {
       <section className="relative py-20 px-4 overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 bg-slate-50 dark:bg-slate-900" />
-        <div 
+        <div
           className="absolute inset-0 opacity-10"
           style={{
             backgroundImage: `url(${headerMainPanoramic})`,
@@ -88,21 +89,21 @@ const Landing = () => {
           </h1>
           
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            LLM modelleri ve API-Football verileri ile desteklenen gelişmiş tahmin sistemi. 
+            LLM modelleri ve API-Football verileri ile desteklenen gelişmiş tahmin sistemi.
             20+ ligden gerçek zamanlı verilerle %68+ doğruluk oranı.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button 
+            <Button
               size="lg"
               onClick={() => navigate('/dashboard')}
               className="text-lg px-8 py-3"
             >
-              Ücretsiz Dene 
+              Ücretsiz Dene
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="lg"
               onClick={() => navigate('/ai-analytics')}
               className="text-lg px-8 py-3"
@@ -113,9 +114,9 @@ const Landing = () => {
 
           {/* Hero Image */}
           <div className="mt-16 relative">
-            <img 
-              src={headerMinimal} 
-              alt="ScoreResultsAI Dashboard" 
+            <img
+              src={headerMinimal}
+              alt="ScoreResultsAI Dashboard"
               className="mx-auto rounded-lg shadow-2xl max-w-4xl w-full"
             />
           </div>
@@ -159,8 +160,8 @@ const Landing = () => {
               <Card key={feature.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
                 <CardHeader className="pb-4">
                   <div className="relative h-40 mb-4 rounded-lg overflow-hidden bg-muted/50 flex items-center justify-center">
-                    <img 
-                      src={feature.image} 
+                    <img
+                      src={feature.image}
                       alt={feature.title}
                       className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
                     />
@@ -189,8 +190,8 @@ const Landing = () => {
           </div>
           
           <div className="text-center mt-12">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="lg"
               onClick={() => navigate('/ai-analytics')}
             >
@@ -215,15 +216,15 @@ const Landing = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {leagues.map((league) => (
-              <Card 
-                key={league.id} 
+              <Card
+                key={league.id}
                 className="group cursor-pointer hover:shadow-lg transition-all duration-300"
                 onClick={() => navigate(`/league/${league.id}`)}
               >
                 <CardContent className="p-6 text-center">
                   <div className="relative h-24 mb-4">
-                    <img 
-                      src={league.logo} 
+                    <img
+                      src={league.logo}
                       alt={league.name}
                       className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
                     />
@@ -255,13 +256,13 @@ const Landing = () => {
                 <CardContent className="p-6">
                   <div className="flex mb-4">
                     {[...Array(5)].map((_, i) => (
-                      <Star 
-                        key={i} 
+                      <Star
+                        key={i}
                         className={`h-4 w-4 ${
-                          i < testimonial.rating 
-                            ? 'text-yellow-400 fill-yellow-400' 
+                          i < testimonial.rating
+                            ? 'text-yellow-400 fill-yellow-400'
                             : 'text-gray-300'
-                        }`} 
+                        }`}
                       />
                     ))}
                   </div>
@@ -286,20 +287,20 @@ const Landing = () => {
             Hemen Başlayın!
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-            ScoreResultsAI ile futbol tahminlerinizi bir sonraki seviyeye taşıyın. 
-            Ücretsiz hesabınızı oluşturun ve AI\'nın gücünü keşfedin.
+            ScoreResultsAI ile futbol tahminlerinizi bir sonraki seviyeye taşıyın.
+            Ücretsiz hesabınızı oluşturun ve AI'nın gücünü keşfedin.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="xl" 
+            <Button
+              size="xl"
               variant="secondary"
               onClick={() => navigate('/dashboard')}
             >
               Ücretsiz Başla
               <ArrowRight />
             </Button>
-            <Button 
-              size="xl" 
+            <Button
+              size="xl"
               variant="outline-light"
               onClick={() => navigate('/about')}
             >
