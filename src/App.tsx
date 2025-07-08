@@ -19,7 +19,7 @@ function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <AuthProvider>
-        <Router>
+        <Router basename="/denememe/">
           <Layout>
             <Routes>
               <Route path="/" element={<Landing />} />
