@@ -30,7 +30,7 @@ export const leagues: League[] = [
     id: 'premier-league',
     name: 'Premier League',
     country: 'İngiltere',
-    logo: premierLeagueLogo,
+    logo: '/images/premier_league_pro.png',
     color: 'from-purple-600 to-blue-600',
     description: 'Dünyanın en rekabetçi futbol ligi'
   },
@@ -38,7 +38,7 @@ export const leagues: League[] = [
     id: 'super-lig',
     name: 'Süper Lig',
     country: 'Türkiye',
-    logo: superLigLogo,
+    logo: '/images/super_lig_pro.png',
     color: 'from-red-600 to-yellow-600',
     description: 'Türkiye\'nin en üst düzey futbol ligi'
   },
@@ -46,7 +46,7 @@ export const leagues: League[] = [
     id: 'champions-league',
     name: 'Şampiyonlar Ligi',
     country: 'Avrupa',
-    logo: championsLeagueLogo,
+    logo: '/images/champions_league_pro.png',
     color: 'from-blue-700 to-blue-900',
     description: 'Avrupa\'nın en prestijli kulüp turnuvası'
   },
@@ -54,7 +54,7 @@ export const leagues: League[] = [
     id: 'bundesliga',
     name: 'Bundesliga',
     country: 'Almanya',
-    logo: bundesligaLogo,
+    logo: '/images/bundesliga_pro.png',
     color: 'from-red-600 to-black',
     description: 'Almanya\'nın birinci futbol ligi'
   },
@@ -62,7 +62,7 @@ export const leagues: League[] = [
     id: 'serie-a',
     name: 'Seri A',
     country: 'İtalya',
-    logo: serieALogo,
+    logo: '/images/serie_a_pro.png',
     color: 'from-green-600 to-red-600',
     description: 'İtalya\'nın en üst düzey futbol ligi'
   },
@@ -70,7 +70,7 @@ export const leagues: League[] = [
     id: 'la-liga',
     name: 'La Liga',
     country: 'İspanya',
-    logo: laLigaLogo,
+    logo: '/images/la_liga_pro.png',
     color: 'from-yellow-500 to-red-600',
     description: 'İspanya\'nın birinci futbol ligi'
   },
@@ -78,7 +78,7 @@ export const leagues: League[] = [
     id: 'ligue-1',
     name: 'Lig 1',
     country: 'Fransa',
-    logo: ligue1Logo,
+    logo: '/images/ligue_1_pro.png',
     color: 'from-blue-600 to-red-600',
     description: 'Fransa\'nın en üst düzey futbol ligi'
   },
@@ -86,7 +86,7 @@ export const leagues: League[] = [
     id: 'europa-league',
     name: 'Europa League',
     country: 'Avrupa',
-    logo: europaLeagueLogo,
+    logo: '/images/europa_league_pro.png',
     color: 'from-orange-500 to-yellow-500',
     description: 'UEFA\'nın ikinci seviye kulüp turnuvası'
   }

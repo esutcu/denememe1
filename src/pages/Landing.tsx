@@ -6,6 +6,8 @@ import { Badge } from '../components/ui/badge'
 import { ArrowRight, TrendingUp, Users, Trophy, Target, Star } from 'lucide-react'
 import { leagues } from '../constants/leagues'
 import { aiFeatures } from '../constants/features'
+import headerMainPanoramic from '/images/header_main_panoramic.png';
+import headerMinimal from '/images/header_minimal.png';
 
 const Landing = () => {
   const navigate = useNavigate()
@@ -67,7 +69,7 @@ const Landing = () => {
         <div 
           className="absolute inset-0 opacity-10"
           style={{
-            backgroundImage: 'url(/images/header_main_panoramic.png)',
+            backgroundImage: `url(${headerMainPanoramic})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}
@@ -112,7 +114,7 @@ const Landing = () => {
           {/* Hero Image */}
           <div className="mt-16 relative">
             <img 
-              src="/images/header_minimal.png" 
+              src={headerMinimal} 
               alt="ScoreResultsAI Dashboard" 
               className="mx-auto rounded-lg shadow-2xl max-w-4xl w-full"
             />
