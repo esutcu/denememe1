@@ -1,146 +1,119 @@
-# 🚧 ScoreResultsAI Gelişim Yol Haritası
+# 🚀 ScoreResultsAI Gelişim Yol Haritası
 
-**Son Güncelleme**: 10 Temmuz 2025  
-**Versiyon**: 2.1  
-**Proje Durumu**: Aktif Geliştirme 🔥
+**Son Güncelleme**: 11 Temmuz 2025
+**Versiyon**: 3.0
+**Proje Durumu**: Son Hazırlıklar ⚡
 
-## 📌 Kritik Öncelikli Görevler
+## 📊 Genel İlerleme Durumu
+![Genel İlerleme](https://geps.dev/progress/85?dangerColor=ff0000&warningColor=ffd700&successColor=00ff00)
 
-### 🔐 Kullanıcı Yönetim Sistemi (%65 Tamamlandı)
-- [x] Temel auth flow (Next.js middleware)
-- [ ] **Şifre Sıfırlama Sistemi** (High Priority 🔴)
-- [ ] Social Login Entegrasyonu (Google, Facebook)
-- [ ] 2FA Implementasyonu
-
-### 💳 Ödeme Sistemi (%40 Tamamlandı)
-- [x] Stripe Test Entegrasyonu
-- [ ] TRY Desteği ve Vergi Hesaplamaları
-- [ ] Abonelik Yönetim Paneli
-- [ ] Otomatik Fatura Oluşturma
-
-## 🛠️ Teknik Geliştirmeler
-
-### 🤖 LLM Altyapısı (%85 Tamamlandı)
 ```mermaid
-graph TD
-    A[Haftalık Veri Çekimi] --> B[Veri İşleme]
-    B --> C[LLM Sorgulama]
-    C --> D[Sonuçların Cache'e Kaydı]
-    D --> E[Kullanıcıya Sunum]
+gantt
+    title Proje Zaman Çizelgesi
+    dateFormat  YYYY-MM-DD
+    section Kritik Çekirdek
+    LLM Altyapısı           :done, 2025-06-01, 30d
+    Tahmin Sistemi          :done, 2025-06-15, 45d
+    Ödeme Sistemi           :active, 2025-07-01, 30d
+    section Kullanıcı Deneyimi
+    Temel Arayüz            :done, 2025-06-10, 25d
+    Premium Özellikler      :2025-07-15, 20d
+    Mobil Uyum              :2025-08-01, 25d
 ```
 
-- [x] DeepSeek R1 Entegrasyonu
-- [x] Batch Processing Sistemi
-- [ ] Çoklu Model Yönetim Paneli
-- [ ] Maliyet Optimizasyonu
+## ✅ Tamamlanan Görevler (ANALYSIS.md ile doğrulanmış)
+- [x] **LLM Entegrasyonu**
+  - Desteklenen modeller:
+    ```markdown
+    openrouter/cypher-alpha:free
+    mistralai/mistral-small-3.2-24b-instruct:free
+    moonshotai/kimi-dev-72b:free
+    deepseek/deepseek-r1-0528-qwen3-8b:free
+    deepseek/deepseek-r1-0528:free
+    qwen/qwen3-30b-a3b:free
+    qwen/qwen3-32b:free
+    thudm/glm-4-32b:free
+    qwen/qwen2.5-vl-32b-instruct:free
+    deepseek/deepseek-chat-v3-0324:free
+    deepseek/deepseek-r1:free
+    deepseek/deepseek-v3-base:free
+    ```
+  - Batch processing sistemi
+  - Tahmin cache mekanizması
+- [x] **Temel Altyapı**
+  - Authentication flow
+  - Supabase bağlantıları
+  - API servisleri
+- [x] **UI/UX Geliştirmeleri**
+  - Responsive tasarım
+  - Gradyan renklerin kaldırılması
+  - Performans iyileştirmeleri
 
-## 📅 Tahmini Zaman Çizelgesi
+## 🎯 Aktif Görevler (Öncelik Sırasına Göre)
 
-Sürüm | Tarih | İçerik
----|---|---
-v2.1 | 24 Temmuz 2025 | Kullanıcı Yönetim Sistemi Tamamlanması
-v2.2 | 14 Ağustos 2025 | Ödeme Sistemi Tamamlanması
-v2.3 | 4 Eylül 2025 | Mobil Uygulama Beta
-v3.0 | 1 Ekim 2025 | Tüm Özelliklerle Genel Yayın
+### 1. Ödeme Sistemi (%75 Tamamlandı)
+![Ödeme İlerleme](https://geps.dev/progress/75?dangerColor=ff0000&warningColor=ffd700&successColor=00ff00)
+- [x] Stripe test entegrasyonu
+- [x] Abonelik plan şemaları
+- [ ] TRY ve KDV desteği (Devam Ediyor ⏳)
+- [ ] Otomatik fatura oluşturma
 
-## 📊 Detaylı Görev Listesi
+### 2. Admin Panel (%60 Tamamlandı)
+![Admin Panel İlerleme](https://geps.dev/progress/60?dangerColor=ff0000&warningColor=ffd700&successColor=00ff00)
+- [x] LLM model yönetimi
+- [x] Kullanıcı istatistikleri
+- [ ] Detaylı gelir raporları
+- [ ] Gerçek zamanlı sistem izleme
 
-### 🗓️ **Fase 1: LLM & Cache Sistemi** (3 hafta) - **KRİTİK ÖNCELİK**
-- [x] Haftalık Batch Processing Sistemi
-- [x] LLM Entegrasyonu (DeepSeek R1, GPT-4, Claude 3.5)
-- [x] Tahmin Cache Tablosu Oluşturma
-- [ ] Admin Panel - LLM Yönetimi
+### 3. Mobil Optimizasyon (%40 Tamamlandı)
+![Mobil İlerleme](https://geps.dev/progress/40?dangerColor=ff0000&warningColor=ffd700&successColor=00ff00)
+- [x] Temel responsive tasarım
+- [ ] PWA entegrasyonu
+- [ ] Native özellikler (Push bildirimleri)
 
-### 🗓️ **Fase 2: Kullanıcı Yönetimi** (2 hafta)
-- [ ] Kayıt/Giriş Sistemleri
-- [ ] Profil Yönetim Paneli
-- [ ] Şifre Sıfırlama Akışı
-
-### 🗓️ **Fase 3: Ödeme Sistemi** (2 hafta)
-- [ ] Stripe Entegrasyonu (TRY Desteği)
-- [ ] Abonelik Planları Yönetimi
-- [ ] Otomatik Fatura Oluşturma
-
-### 🗓️ **Fase 4: UI/UX İyileştirmeleri** (1.5 hafta)
-- [ ] Gradyan Renklerin Kaldırılması
-- [ ] Modern Tasarım Uygulaması
-- [ ] Mobil Deneyim Optimizasyonu
-
-### 🗓️ **Fase 5: Analytics ve Optimizasyon** (1 hafta)
-- [ ] Admin Dashboard Geliştirmeleri
-- [ ] Kullanıcı Analitikleri
-- [ ] Performans Optimizasyonları
-
-## 🇹🇷 Türkiye Özel Gereksinimleri
-- [ ] TRY Desteği ve KDV Hesaplamaları
-- [ ] Yerelleştirme (Türkçe Dil Desteği)
-- [ ] Türk Takımları için Özel Analizler
-- [ ] Yerli Ödeme Yöntemleri Entegrasyonu
-
-## 🎯 UX/UI Kritik Noktalar
-- **Kullanıcı Onboarding**: Basit kayıt akışı, hoş geldin turu
-- **Ödeme Deneyimi**: Tek sayfalık, güvenli ödeme akışı
-- **Tahmin Sunumu**: Anlaşılır görselleştirmeler, renk kodlu sonuçlar
-- **Mobil Uyum**: %100 responsive tasarım, PWA desteği
-- **Performans**: <2s sayfa yükleme süresi, optimizasyon
-
-## 🤖 Gelişmiş LLM & AI Özellikleri
-```typescript
-// Örnek Tahmin Sorgulama Akışı
-async function getMatchPrediction(matchId: string) {
-  // Önce cache kontrolü
-  const cached = await checkPredictionCache(matchId);
-  if (cached) return cached;
-  
-  // Cache yoksa LLM'den tahmin al
-  const prediction = await fetchLLMPrediction(matchId);
-  
-  // Sonucu cache'e kaydet
-  await cachePrediction(matchId, prediction);
-  return prediction;
-}
-```
-
-- [ ] Çoklu Model Karşılaştırması
-- [ ] Gerçek Zamanlı Tahmin Güncellemeleri
-- [ ] Tahmin Güven Skoru Hesaplama
-- [ ] Anomali Tespiti (Sürpriz Sonuçlar)
-
-## 🎮 Gamification
-- [ ] Tahmin Ligi & Liderlik Tablosu
-- [ ] Başarı Rozetleri
-- [ ] Seviye Sistemi
-- [ ] Ödüllü Tahmin Yarışmaları
-
-## 📱 Advanced Features
-- [ ] Canlı Maç Takibi
-- [ ] Özel Bildirimler (Gol, Kart, Değişiklik)
-- [ ] Kişiselleştirilmiş Tahmin Önerileri
-- [ ] Takım Karşılaştırma Aracı
-
-## 🎯 **TOPLAM PROJE ÖZETİ**
-- **Tahmini Tamamlanma**: 1 Ekim 2025
-- **Kritik Görevler**: 3 ana faz
-- **Bütçe Durumu**: %65 tüketildi
-- **Takım Büyüklüğü**: 5 geliştirici
-
-### 🚀 **KRİTİK BAŞARI FAKTÖRLERİ**
-1. LLM Altyapısının Zamanında Tamamlanması
-2. Ödeme Sisteminin Sorunsuz Çalışması
-3. Kullanıcı Deneyiminde Mükemmellik
-4. Performans Optimizasyonu
-
-### 💡 **CORE INNOVATION**
+## 📅 Sonraki Hedefler
 ```mermaid
-graph LR
-A[Gerçek Zamanlı Veri] --> B[Çoklu LLM Analizi]
-B --> C[Öngörülebilir Tahminler]
-C --> D[Kişiselleştirilmiş Kullanıcı Deneyimi]
+journey
+    title Sonraki 30 Gün Hedefleri
+    section Sprint 1
+    Ödeme Sistemi Tamamlama: 7: Active
+    section Sprint 2
+    Admin Panel Geliştirme: 5: Active
+    section Sprint 3
+    Mobil Optimizasyon: 3: Active
 ```
 
-### 🔑 **TEKNİK MİMARİ ÖZETİ**
-- **Frontend**: React + TypeScript + Vite
-- **Backend**: Supabase + Edge Functions
-- **AI Altyapı**: DeepSeek R1, GPT-4, Claude 3.5
-- **Database**: PostgreSQL (Supabase)
-- **Ödeme**: Stripe + Yerel Ödeme Yöntemleri
+## 🔍 Detaylı Teknik Görevler
+### Veritabanı İyileştirmeleri
+- [ ] Query optimizasyonu (Query plan analizi)
+- [ ] İndeksleme stratejisi güncellemesi
+- [ ] Replikasyon ayarları
+
+### Güvenlik Geliştirmeleri
+- [ ] Rate limiting implementasyonu
+- [ ] İki faktörlü kimlik doğrulama
+- [ ] Pentest raporu uygulamaları
+
+### AI/ML Geliştirmeleri
+- [ ] Model karşılaştırma arayüzü
+- [ ] Otomatik model seçimi
+- [ ] Tahmin kalite metriği
+
+## 🌍 Türkiye Odaklı Geliştirmeler
+- [ ] Yerel ödeme yöntemleri (Papara, İyzico)
+- [ ] Türkçe dil paketi
+- [ ] Yerel lig analiz önceliği
+
+## 📈 Performans Metrikleri
+| Metric               | Hedef     | Şuanki Durum |
+|----------------------|-----------|--------------|
+| API Yanıt Süresi     | <500ms    | 680ms        |
+| Tahmin Doğruluğu     | >%75      | %68          |
+| Maks. Eşz. Kullanıcı | 10,000    | 2,500        |
+
+## 🚀 Sürüm Planı
+| Versiyon | Çıkış Tarihi   | Öne Çıkan Özellikler                  |
+|----------|----------------|---------------------------------------|
+| v3.0     | 01 Eki 2025    | Tüm özelliklerle genel yayın          |
+| v3.1     | 15 Kas 2025    | Mobil uygulama ve gelişmiş bildirimler|
+| v4.0     | 01 Oca 2026    | Yapay zeka ile canlı maç analizi      |
