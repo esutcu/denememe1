@@ -1,3 +1,4 @@
+// src/pages/Auth.tsx - Logo sorunu düzeltilmiş hali
 import React, { useState } from 'react'
 import { Navigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
@@ -79,46 +80,54 @@ export default function Auth() {
     }
   }
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Brain className="h-10 w-10 text-blue-400" />
-            <span className="text-3xl font-bold text-white">ScoreResults</span>
-            <span className="text-xl font-light text-blue-400">AI</span>
-          </div>
-          <p className="text-slate-300">AI destekli futbol tahmin sistemi</p>
-        </div>
-
-        <Card className="border-slate-700 bg-slate-800/90 backdrop-blur-sm shadow-2xl">
-          <CardHeader>
-            <CardTitle className="text-white text-xl">Hesap İşlemleri</CardTitle>
-            <CardDescription className="text-slate-300">
-              Tahminlere erişmek için giriş yapın veya yeni hesap oluşturun
-            </CardDescription>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.1)_50%,transparent_75%,transparent)] bg-[length:30px_30px]" />
+      
+      <div className="relative min-h-screen flex items-center justify-center p-4">
+        <Card className="w-full max-w-md bg-slate-800/90 backdrop-blur-sm border-slate-700 shadow-2xl">
+          <CardHeader className="text-center space-y-4">
+            {/* LOGO DÜZELTMESI - ScoreResultsAI bölümü */}
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <img 
+                src="/images/scoreresultsai_logo.svg" 
+                alt="ScoreResultsAI Logo" 
+                className="h-10 w-10"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/images/logo-fallback.png'; // Fallback görsel
+                }}
+              />
+              <div className="text-2xl font-bold text-white">
+                <span className="text-blue-400">Score</span>
+                <span className="text-green-400">Results</span>
+                <span className="text-white">AI</span>
+              </div>
+            </div>
+            
+            <div>
+              <CardTitle className="text-2xl font-bold text-white">
+                Hoş Geldiniz
+              </CardTitle>
+              <CardDescription className="text-slate-400 mt-2">
+                AI destekli futbol analiz platformuna giriş yapın
+              </CardDescription>
+            </div>
           </CardHeader>
+
           <CardContent>
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-700 border-slate-600">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2 bg-slate-700/50">
                 <TabsTrigger 
                   value="signin" 
-                  className="text-slate-300 data-[state=active]:text-white data-[state=active]:bg-blue-600"
+                  className="text-slate-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
                 >
                   Giriş Yap
                 </TabsTrigger>
                 <TabsTrigger 
-                  value="signup" 
-                  className="text-slate-300 data-[state=active]:text-white data-[state=active]:bg-green-600"
+                  value="signup"
+                  className="text-slate-300 data-[state=active]:bg-green-600 data-[state=active]:text-white"
                 >
                   Kayıt Ol
                 </TabsTrigger>

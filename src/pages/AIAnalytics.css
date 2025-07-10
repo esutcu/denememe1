@@ -1,15 +1,215 @@
-/* Progress bar styles */
+/* Progress bar temel stilleri */
 .progress-bar-container {
-    width: 100%;
-    background-color: #e5e7eb; /* bg-gray-200 */
-    border-radius: 9999px; /* rounded-full */
-    height: 0.5rem; /* h-2 */
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-.progress-bar {
-    height: 0.5rem; /* h-2 */
-    border-radius: 9999px; /* rounded-full */
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
+.progress-bar-container:hover {
+  transform: translateY(-1px);
+}
+
+/* Progress bar glow effects */
+.progress-bar-glow {
+  position: relative;
+  overflow: visible;
+}
+
+.progress-bar-glow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 8px currentColor;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.progress-bar-container:hover .progress-bar-glow::after {
+  opacity: 0.3;
+}
+
+/* Ultra Spesifik CSS Seçicileri - Tailwind'ı Tamamen Override */
+.performance-metrics .progress-green,
+div.progress-green,
+[class*="progress-green"],
+[data-color="progress-green"] {
+  background: linear-gradient(90deg, #10b981, #059669) !important;
+  background-color: #10b981 !important;
+  background-image: linear-gradient(90deg, #10b981, #059669) !important;
+  border: none !important;
+}
+
+.performance-metrics .progress-blue,
+div.progress-blue,
+[class*="progress-blue"],
+[data-color="progress-blue"] {
+  background: linear-gradient(90deg, #3b82f6, #2563eb) !important;
+  background-color: #3b82f6 !important;
+  background-image: linear-gradient(90deg, #3b82f6, #2563eb) !important;
+  border: none !important;
+}
+
+.performance-metrics .progress-red,
+div.progress-red,
+[class*="progress-red"],
+[data-color="progress-red"] {
+  background: linear-gradient(90deg, #ef4444, #dc2626) !important;
+  background-color: #ef4444 !important;
+  background-image: linear-gradient(90deg, #ef4444, #dc2626) !important;
+  border: none !important;
+}
+
+.performance-metrics .progress-yellow,
+div.progress-yellow,
+[class*="progress-yellow"],
+[data-color="progress-yellow"] {
+  background: linear-gradient(90deg, #eab308, #ca8a04) !important;
+  background-color: #eab308 !important;
+  background-image: linear-gradient(90deg, #eab308, #ca8a04) !important;
+  border: none !important;
+}
+
+.performance-metrics .progress-green-dark,
+div.progress-green-dark,
+[class*="progress-green-dark"],
+[data-color="progress-green-dark"] {
+  background: linear-gradient(90deg, #059669, #047857) !important;
+  background-color: #059669 !important;
+  background-image: linear-gradient(90deg, #059669, #047857) !important;
+  border: none !important;
+}
+
+.performance-metrics .progress-orange,
+div.progress-orange,
+[class*="progress-orange"],
+[data-color="progress-orange"] {
+  background: linear-gradient(90deg, #f97316, #ea580c) !important;
+  background-color: #f97316 !important;
+  background-image: linear-gradient(90deg, #f97316, #ea580c) !important;
+  border: none !important;
+}
+
+/* Tailwind sınıflarını override etme */
+.bg-green-500 {
+  background: linear-gradient(90deg, #10b981, #059669) !important;
+}
+
+.bg-blue-500 {
+  background: linear-gradient(90deg, #3b82f6, #2563eb) !important;
+}
+
+.bg-red-500 {
+  background: linear-gradient(90deg, #ef4444, #dc2626) !important;
+}
+
+.bg-yellow-500 {
+  background: linear-gradient(90deg, #eab308, #ca8a04) !important;
+}
+
+.bg-green-600 {
+  background: linear-gradient(90deg, #059669, #047857) !important;
+}
+
+.bg-orange-500 {
+  background: linear-gradient(90deg, #f97316, #ea580c) !important;
+}
+
+/* Yuvarlak nokta renkleri */
+.dot-green {
+  background-color: #10b981 !important;
+}
+
+.dot-blue {
+  background-color: #3b82f6 !important;
+}
+
+.dot-red {
+  background-color: #ef4444 !important;
+}
+
+.dot-yellow {
+  background-color: #eab308 !important;
+}
+
+.dot-green-dark {
+  background-color: #059669 !important;
+}
+
+.dot-orange {
+  background-color: #f97316 !important;
+}
+
+/* Progress bar animasyonu */
+@keyframes progressFill {
+  from {
+    width: 0%;
+    opacity: 0.5;
+  }
+  to {
+    width: var(--target-width, 100%);
+    opacity: 1;
+  }
+}
+
+.progress-animate {
+  animation: progressFill 1.5s ease-out forwards;
+}
+
+/* Dark mode optimizasyonları */
+.dark .progress-bar-container {
+  background-color: rgba(31, 41, 55, 0.8);
+}
+
+/* Progress bar width sınıfları */
+.progress-width-78 { width: 78% !important; }
+.progress-width-85 { width: 85% !important; }
+.progress-width-82 { width: 82% !important; }
+.progress-width-80 { width: 80% !important; }
+.progress-width-77 { width: 77% !important; }
+.progress-width-79 { width: 79% !important; }
+
+/* Animation delay sınıfları */
+.animation-delay-0 { animation-delay: 0s !important; }
+.animation-delay-1 { animation-delay: 0.2s !important; }
+.animation-delay-2 { animation-delay: 0.4s !important; }
+.animation-delay-3 { animation-delay: 0.6s !important; }
+.animation-delay-4 { animation-delay: 0.8s !important; }
+.animation-delay-5 { animation-delay: 1.0s !important; }
+
+/* Responsive progress bars */
+@media (max-width: 768px) {
+  .progress-bar-container {
+    height: 0.75rem;
+  }
+  
+  .progress-bar-glow {
+    height: 0.75rem;
+  }
+}
+
+/* Spesifik progress bar container'ları için */
+.performance-metrics .progress-green,
+.performance-metrics .progress-blue,
+.performance-metrics .progress-red,
+.performance-metrics .progress-yellow,
+.performance-metrics .progress-green-dark,
+.performance-metrics .progress-orange {
+  height: 100% !important;
+  border-radius: 9999px !important;
+  transition: all 1000ms ease-out !important;
+}
+
+/* Spesifik progress bar container'ları için */
+.performance-metrics .progress-green,
+.performance-metrics .progress-blue,
+.performance-metrics .progress-red,
+.performance-metrics .progress-yellow,
+.performance-metrics .progress-green-dark,
+.performance-metrics .progress-orange {
+  height: 100% !important;
+  border-radius: 9999px !important;
+  transition: all 1000ms ease-out !important;
 }

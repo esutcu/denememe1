@@ -1,12 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Supabase configuration - hardcoded as per best practices
-const supabaseUrl = 'https://eyouisaqohhujtfwmktp.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5b3Vpc2Fxb2hodWp0Zndta3RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NzExMzAsImV4cCI6MjA2NzU0NzEzMH0.pj9tFt_naBnEyXyCx3rOzK03gXWbitt6wK2LCO8BTGA'
+// Doğru Supabase credentials (APILER belgesinden)
+const supabaseUrl = 'https://ffeisjizngxvrpaencph.supabase.co'
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmZWlzaml6bmd4dnJwYWVuY3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5Mjc1NTMsImV4cCI6MjA2NzUwMzU1M30.YUCx47onp10u7Lopl5Yki98h9zNKkyMkXogWJQecXPc'
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Helper function to get current user
+// ===== AUTH HELPER FUNCTIONS =====
+
 export async function getCurrentUser() {
   const { data: { user }, error } = await supabase.auth.getUser()
   if (error) {
@@ -16,7 +17,6 @@ export async function getCurrentUser() {
   return user
 }
 
-// Helper function for sign up with email redirect
 export async function signUp(email: string, password: string) {
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -34,7 +34,6 @@ export async function signUp(email: string, password: string) {
   return data
 }
 
-// Helper function for sign in
 export async function signIn(email: string, password: string) {
   const { data, error } = await supabase.auth.signInWithPassword({ 
     email, 
@@ -49,11 +48,33 @@ export async function signIn(email: string, password: string) {
   return data
 }
 
-// Helper function for sign out
 export async function signOut() {
   const { error } = await supabase.auth.signOut()
   if (error) {
     console.error('Error signing out:', error.message)
     throw error
   }
+}
+
+// ===== SUBSCRIPTION HELPERS =====
+
+export async function getUserSubscription(userId: string) {
+  const { data, error } = await supabase
+    .from('subscriptions')
+    .select('*')
+    .eq('user_id', userId)
+    .single()
+    
+  return { data, error }
+}
+
+export async function getUserUsage(userId: string, date: string = new Date().toISOString().split('T')[0]) {
+  const { data, error } = await supabase
+    .from('user_usage')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('date', date)
+    .single()
+    
+  return { data, error }
 }

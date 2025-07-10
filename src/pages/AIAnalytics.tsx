@@ -1,3 +1,4 @@
+// src/pages/AIAnalytics.tsx - Güncel ve tam dosya
 import React, { useState, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
@@ -16,18 +17,158 @@ import {
   Activity,
   Cpu,
   Database,
-  ArrowRight
+  ArrowRight,
+  Clock,
+  Shield,
+  CheckCircle,
+  AlertCircle,
+  Network
 } from 'lucide-react'
 import { aiFeatures } from '../constants/features'
 import './AIAnalytics.css'
 import { useNavigate } from 'react-router-dom'
+
+// Performance metrics - component dışında tanımlandı
+const performanceMetrics = [
+  { 
+    label: 'Genel Doğruluk', 
+    value: 78, 
+    progressClass: 'progress-green',
+    dotClass: 'dot-green',
+    widthClass: 'progress-width-78'
+  },
+  { 
+    label: 'Premier League', 
+    value: 85, 
+    progressClass: 'progress-blue',
+    dotClass: 'dot-blue',
+    widthClass: 'progress-width-85'
+  },
+  { 
+    label: 'Süper Lig', 
+    value: 82, 
+    progressClass: 'progress-red',
+    dotClass: 'dot-red',
+    widthClass: 'progress-width-82'
+  },
+  { 
+    label: 'Bundesliga', 
+    value: 80, 
+    progressClass: 'progress-yellow',
+    dotClass: 'dot-yellow',
+    widthClass: 'progress-width-80'
+  },
+  { 
+    label: 'Serie A', 
+    value: 77, 
+    progressClass: 'progress-green-dark',
+    dotClass: 'dot-green-dark',
+    widthClass: 'progress-width-77'
+  },
+  { 
+    label: 'La Liga', 
+    value: 79, 
+    progressClass: 'progress-orange',
+    dotClass: 'dot-orange',
+    widthClass: 'progress-width-79'
+  }
+]
+
+// Target widths - component dışında sabit değer
+const TARGET_WIDTHS = [78, 85, 82, 80, 77, 79]
+
 const AIAnalytics = () => {
   const [selectedFeature, setSelectedFeature] = useState(aiFeatures[0])
   const [activeTab, setActiveTab] = useState('overview')
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [showVideo, setShowVideo] = useState(false)
+  const [progressWidthClasses, setProgressWidthClasses] = useState<string[]>(
+    Array(6).fill('progress-width-0')
+  )
   const videoRef = useRef<HTMLVideoElement>(null)
   const navigate = useNavigate()
+
+  // Progress bar animasyonu için
+  React.useEffect(() => {
+    if (activeTab === 'performance') {
+      console.log(' Performance tab açıldı, progress bar animasyonu başlıyor...')
+      
+      // İlk başta tüm bar'ları 0 yap
+      setProgressWidthClasses(Array(6).fill('progress-width-0'))
+      
+      // 300ms gecikme ile başlat, sonra sırayla doldur
+      setTimeout(() => {
+        TARGET_WIDTHS.forEach((width, index) => {
+          setTimeout(() => {
+            console.log(`🎯 Bar ${index + 1} dolduruluyor: ${width}% (${`progress-width-${width}`})`)
+            setProgressWidthClasses(prev => {
+              const newClasses = [...prev]
+              newClasses[index] = `progress-width-${width}`
+              return newClasses
+            })
+          }, index * 150) // Her bar 150ms arayla dolsun
+        })
+      }, 300) // İlk gecikmesi
+    }
+  }, [activeTab]) // activeTab dependency'si yeterli
+  React.useEffect(() => {
+    console.log(' AI Analytics renkleri yükleniyor...')
+    console.log(' Metrikler:', performanceMetrics)
+    
+    const styleElement = document.createElement('style')
+    styleElement.innerHTML = `
+      .performance-metrics [data-color="progress-green"],
+      .progress-green { 
+        background: linear-gradient(90deg, #10b981, #059669) !important; 
+        background-color: #10b981 !important;
+        background-image: linear-gradient(90deg, #10b981, #059669) !important;
+      }
+      .performance-metrics [data-color="progress-blue"],
+      .progress-blue { 
+        background: linear-gradient(90deg, #3b82f6, #2563eb) !important; 
+        background-color: #3b82f6 !important;
+        background-image: linear-gradient(90deg, #3b82f6, #2563eb) !important;
+      }
+      .performance-metrics [data-color="progress-red"],
+      .progress-red { 
+        background: linear-gradient(90deg, #ef4444, #dc2626) !important; 
+        background-color: #ef4444 !important;
+        background-image: linear-gradient(90deg, #ef4444, #dc2626) !important;
+      }
+      .performance-metrics [data-color="progress-yellow"],
+      .progress-yellow { 
+        background: linear-gradient(90deg, #eab308, #ca8a04) !important; 
+        background-color: #eab308 !important;
+        background-image: linear-gradient(90deg, #eab308, #ca8a04) !important;
+      }
+      .performance-metrics [data-color="progress-green-dark"],
+      .progress-green-dark { 
+        background: linear-gradient(90deg, #059669, #047857) !important; 
+        background-color: #059669 !important;
+        background-image: linear-gradient(90deg, #059669, #047857) !important;
+      }
+      .performance-metrics [data-color="progress-orange"],
+      .progress-orange { 
+        background: linear-gradient(90deg, #f97316, #ea580c) !important; 
+        background-color: #f97316 !important;
+        background-image: linear-gradient(90deg, #f97316, #ea580c) !important;
+      }
+      .dot-green { background-color: #10b981 !important; }
+      .dot-blue { background-color: #3b82f6 !important; }
+      .dot-red { background-color: #ef4444 !important; }
+      .dot-yellow { background-color: #eab308 !important; }
+      .dot-green-dark { background-color: #059669 !important; }
+      .dot-orange { background-color: #f97316 !important; }
+    `
+    document.head.appendChild(styleElement)
+    console.log('✅ Stil eklendi:', styleElement.innerHTML.length, 'karakter')
+    
+    return () => {
+      if (document.head.contains(styleElement)) {
+        document.head.removeChild(styleElement)
+      }
+    }
+  }, [])
 
   const aiCapabilities = [
     {
@@ -57,12 +198,54 @@ const AIAnalytics = () => {
   ]
 
   const performanceMetrics = [
-    { label: 'Genel Doğruluk', value: 78, color: 'bg-green-500' },
-    { label: 'Premier League', value: 85, color: 'bg-blue-500' },
-    { label: 'Süper Lig', value: 82, color: 'bg-red-500' },
-    { label: 'Bundesliga', value: 80, color: 'bg-yellow-500' },
-    { label: 'Serie A', value: 77, color: 'bg-green-600' },
-    { label: 'La Liga', value: 79, color: 'bg-orange-500' }
+    { 
+      label: 'Genel Doğruluk', 
+      value: 78, 
+      progressClass: 'progress-green',
+      dotClass: 'dot-green',
+      progressColor: 'linear-gradient(90deg, #10b981, #059669)',
+      dotColor: '#10b981'
+    },
+    { 
+      label: 'Premier League', 
+      value: 85, 
+      progressClass: 'progress-blue',
+      dotClass: 'dot-blue',
+      progressColor: 'linear-gradient(90deg, #3b82f6, #2563eb)',
+      dotColor: '#3b82f6'
+    },
+    { 
+      label: 'Süper Lig', 
+      value: 82, 
+      progressClass: 'progress-red',
+      dotClass: 'dot-red',
+      progressColor: 'linear-gradient(90deg, #ef4444, #dc2626)',
+      dotColor: '#ef4444'
+    },
+    { 
+      label: 'Bundesliga', 
+      value: 80, 
+      progressClass: 'progress-yellow',
+      dotClass: 'dot-yellow',
+      progressColor: 'linear-gradient(90deg, #eab308, #ca8a04)',
+      dotColor: '#eab308'
+    },
+    { 
+      label: 'Serie A', 
+      value: 77, 
+      progressClass: 'progress-green-dark',
+      dotClass: 'dot-green-dark',
+      progressColor: 'linear-gradient(90deg, #059669, #047857)',
+      dotColor: '#059669'
+    },
+    { 
+      label: 'La Liga', 
+      value: 79, 
+      progressClass: 'progress-orange',
+      dotClass: 'dot-orange',
+      progressColor: 'linear-gradient(90deg, #f97316, #ea580c)',
+      dotColor: '#f97316'
+    }
   ]
 
   const handlePlayDemo = () => {
@@ -191,72 +374,72 @@ const AIAnalytics = () => {
                     key={feature.id}
                     className={`cursor-pointer transition-all ${
                       selectedFeature.id === feature.id 
-                        ? 'ring-2 ring-blue-500 shadow-lg' 
-                        : 'hover:shadow-md'
+                        ? 'ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-950/20' 
+                        : 'hover:shadow-md hover:bg-slate-50 dark:hover:bg-slate-800/50'
                     }`}
                     onClick={() => setSelectedFeature(feature)}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl">{feature.icon}</span>
-                        <div>
-                          <h4 className="font-medium">{feature.title}</h4>
-                          <p className="text-sm text-muted-foreground line-clamp-2">
-                            {feature.description}
-                          </p>
+                        <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.color} flex items-center justify-center text-white text-xl flex-shrink-0`}>
+                          {feature.icon}
                         </div>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium truncate">{feature.title}</h4>
+                          <p className="text-sm text-muted-foreground truncate">{feature.description}</p>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                       </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
 
-              {/* Feature Detail */}
+              {/* Selected Feature Details */}
               <div className="lg:col-span-2">
                 <Card className="h-full">
                   <CardHeader>
                     <div className="flex items-center gap-3">
-                      <span className="text-3xl">{selectedFeature.icon}</span>
+                      <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${selectedFeature.color} flex items-center justify-center text-white text-2xl`}>
+                        {selectedFeature.icon}
+                      </div>
                       <div>
-                        <CardTitle>{selectedFeature.title}</CardTitle>
-                        <p className="text-muted-foreground">{selectedFeature.description}</p>
+                        <CardTitle className="text-2xl">{selectedFeature.title}</CardTitle>
+                        <p className="text-muted-foreground mt-1">{selectedFeature.description}</p>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    {/* Feature Image */}
-                    <div className="relative rounded-lg overflow-hidden">
+                    {/* Feature Image - FIX: Resmi kare içine tam oturtma */}
+                    <div className="relative rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 aspect-video">
                       <img 
                         src={selectedFeature.image} 
                         alt={selectedFeature.title}
-                        className="w-full h-64 object-cover"
+                        className="w-full h-full object-contain" /* object-cover yerine object-contain */
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/images/placeholder.png'; // Fallback image
+                        }}
                       />
-                      <div className="absolute inset-0 bg-slate-900/20" />
                     </div>
 
                     {/* Benefits */}
                     <div>
                       <h4 className="font-semibold mb-3">Temel Avantajlar</h4>
-                      <div className="space-y-3">
-                        {selectedFeature.benefits.map((benefit, index) => (
-                          <div key={index} className="flex items-center gap-3">
-                            <div className="w-6 h-6 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                              <div className="w-2 h-2 bg-green-600 rounded-full" />
-                            </div>
-                            <span>{benefit}</span>
+                      <div className="space-y-2">
+                        {selectedFeature.benefits.map((benefit, idx) => (
+                          <div key={idx} className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                            <span className="text-sm">{benefit}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <Button
-    className="w-full"
-    onClick={() => navigate('/auth')}
-  >
-    Bu Özelliği Deneyin
-    <ArrowRight className="ml-2 h-4 w-4" />
-  </Button>
+                    <Button className="w-full" onClick={() => navigate('/dashboard')}>
+                      <ArrowRight className="mr-2 h-4 w-4" />
+                      Şimdi Dene
+                    </Button>
                   </CardContent>
                 </Card>
               </div>
@@ -310,27 +493,88 @@ const AIAnalytics = () => {
               </Card>
             </div>
 
-            {/* League Performance */}
-            <Card>
+            {/* League Performance - GÜNCELLENMIŞ BÖLÜM */}
+            <Card className="progress-bar-container performance-metrics">
               <CardHeader>
-                <CardTitle>Lig Bazında Performans</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-blue-500" />
+                  Lig Bazında Performans
+                </CardTitle>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Her lig için tahmin doğruluk oranları
+                </p>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {performanceMetrics.map((metric, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>{metric.label}</span>
-                        <span className="font-medium">%{metric.value}</span>
+                    <div key={index} className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="font-medium text-base">{metric.label}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-xl">%{metric.value}</span>
+                          <div className={`w-3 h-3 rounded-full ${metric.dotClass}`} />
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden shadow-inner">
                         <div 
-                          className={`${metric.color} h-2 rounded-full transition-all duration-300 progress-bar`}
-                          data-progress={metric.value}
-                        />
+                          className={`h-full rounded-full progress-bar-glow relative progress-transition ${metric.progressClass} ${progressWidthClasses[index]}`}
+                          data-color={metric.progressClass}
+                        >
+                          {/* İç gölge efekti */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full" />
+                        </div>
+                      </div>
+                      
+                      {/* Ek metrik bilgisi */}
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-muted-foreground">Hedef: %75</span>
+                        <div className="flex items-center gap-1">
+                          {metric.value >= 75 ? (
+                            <>
+                              <span className="text-green-600 font-medium">Hedef Aşıldı</span>
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-orange-600 font-medium">Hedef Altında</span>
+                              <div className="w-2 h-2 bg-orange-500 rounded-full" />
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
+                </div>
+                
+                {/* Performans özeti */}
+                <div className="mt-8 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-bold text-green-600">
+                        {performanceMetrics.filter(m => m.value >= 80).length}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Mükemmel</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-blue-600">
+                        {performanceMetrics.filter(m => m.value >= 75 && m.value < 80).length}
+                      </div>
+                      <div className="text-xs text-muted-foreground">İyi</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-orange-600">
+                        {performanceMetrics.filter(m => m.value < 75).length}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Geliştirilmeli</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-purple-600">
+                        {Math.round(performanceMetrics.reduce((acc, m) => acc + m.value, 0) / performanceMetrics.length)}%
+                      </div>
+                      <div className="text-xs text-muted-foreground">Ortalama</div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -347,7 +591,7 @@ const AIAnalytics = () => {
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium">LLM Topluluğu / Toplu Model Sistemi</div>
+                      <div className="font-medium">LLM Topluluğu</div>
                       <div className="text-sm text-muted-foreground">12 farklı dil modeli kombinasyonu</div>
                     </div>
                     <div className="p-3 border rounded-lg">
@@ -385,7 +629,7 @@ const AIAnalytics = () => {
                       <div className="text-sm text-muted-foreground">Oyuncu performans metrikleri</div>
                     </div>
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium">Takım Analitiği / Takım Bazlı Analizler</div>
+                      <div className="font-medium">Takım Analitiği</div>
                       <div className="text-sm text-muted-foreground">Takım taktik analizleri</div>
                     </div>
                   </div>
@@ -399,19 +643,27 @@ const AIAnalytics = () => {
                 <CardTitle>Sistem Mimarisi</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="relative">
-                  <img 
-                    src="/images/card_data_analysis_3d.png" 
-                    alt="System Architecture" 
-                    className="w-full h-64 object-cover rounded-lg"
-                  />
-                  <div className="absolute inset-0 bg-slate-900/50 rounded-lg flex items-end">
-                    <div className="p-6 text-white">
-                      <h3 className="text-lg font-semibold mb-2">Mikroservis Mimarisi</h3>
-                      <p className="text-sm opacity-90">
-                        Ölçeklenebilir, hızlı ve güvenilir AI analiz sistemi
-                      </p>
+                <div className="grid md:grid-cols-3 gap-6 text-center">
+                  <div className="space-y-3">
+                    <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto">
+                      <Database className="h-8 w-8 text-blue-600" />
                     </div>
+                    <h4 className="font-semibold">Veri Toplama</h4>
+                    <p className="text-sm text-muted-foreground">API-Football ve geçmiş veri kaynaklarından gerçek zamanlı veri toplama</p>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto">
+                      <Brain className="h-8 w-8 text-green-600" />
+                    </div>
+                    <h4 className="font-semibold">AI İşleme</h4>
+                    <p className="text-sm text-muted-foreground">LLM modelleri ve makine öğrenimi algoritmaları ile veri analizi</p>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto">
+                      <Target className="h-8 w-8 text-purple-600" />
+                    </div>
+                    <h4 className="font-semibold">Tahmin Üretimi</h4>
+                    <p className="text-sm text-muted-foreground">Yüksek doğrulukla maç sonucu tahminleri ve güvenilirlik skorları</p>
                   </div>
                 </div>
               </CardContent>
@@ -421,19 +673,17 @@ const AIAnalytics = () => {
 
         {/* Video Modal */}
         {showVideo && (
-          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-            <div className="relative w-full max-w-4xl mx-auto">
+          <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+            <div className="relative max-w-4xl w-full">
               <div className="relative bg-black rounded-lg overflow-hidden">
                 <video
                   ref={videoRef}
                   className="w-full h-auto"
                   controls
-                  onEnded={() => setIsVideoPlaying(false)}
-                  onPlay={() => setIsVideoPlaying(true)}
-                  onPause={() => setIsVideoPlaying(false)}
+                  poster="/images/video-thumbnail.jpg"
                 >
                   <source src="/videos/ai_analytics_demo.mp4" type="video/mp4" />
-                  Tarayıcınız video oynatmayı desteklemiyor.
+                  Tarayıcınız video elementini desteklemiyor.
                 </video>
                 
                 {/* Overlay Controls */}
