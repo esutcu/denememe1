@@ -252,4 +252,4 @@ CMD ["npm", "run", "start"]
 ## 📄 Lisans
 Proje özel lisans ile korunmaktadır. Detaylar için [LİSANS.md](LICENSE.md) dosyasına bakınız.
 
-_© 2025 ScoreResultsAI - Tüm hakları saklıdır_
+_© 2025 ScoreResultsAI - Tüm hakları saklıdır_.
