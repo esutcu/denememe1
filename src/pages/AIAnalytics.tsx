@@ -310,30 +310,43 @@ const AIAnalytics = () => {
               </Card>
             </div>
 
-            {/* League Performance */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Lig Bazında Performans</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {performanceMetrics.map((metric, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>{metric.label}</span>
-                        <span className="font-medium">%{metric.value}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div 
-                          className={`${metric.color} h-2 rounded-full transition-all duration-300 progress-bar`}
-                          data-progress={metric.value}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            // src/pages/AIAnalytics.tsx içindeki League Performance bölümünü güncelleyin
+
+{/* League Performance */}
+<Card>
+  <CardHeader>
+    <CardTitle>Lig Bazında Performans</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <div className="space-y-4">
+      {performanceMetrics.map((metric, index) => (
+        <div key={index} className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="font-medium">{metric.label}</span>
+            <span className="font-bold text-lg">%{metric.value}</span>
+          </div>
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+            <div 
+              className={`${metric.color} performance-progress-bar`}
+              style={{
+                '--progress-width': `${metric.value}%`,
+                '--animation-delay': `${index * 0.2}s`
+              } as React.CSSProperties}
+            />
+          </div>
+          {/* Ek metrik bilgisi */}
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>Hedef: %75</span>
+            <span className={metric.value >= 75 ? 'text-green-600' : 'text-orange-600'}>
+              {metric.value >= 75 ? 'Hedef Aşıldı ✓' : 'Hedef Altında'}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </CardContent>
+</Card>
+
           </TabsContent>
 
           {/* Technology Tab */}

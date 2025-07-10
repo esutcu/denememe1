@@ -13,3 +13,109 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
 }
+
+/* Performance metrics progress bar */
+.performance-progress-bar {
+    height: 100%;
+    border-radius: 9999px; /* rounded-full */
+    transition: all 1000ms ease-out;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+    width: var(--progress-width);
+    animation: progressFill 1.5s ease-out var(--animation-delay) both;
+}
+
+@keyframes progressFill {
+    from {
+        width: 0%;
+    }
+    to {
+        width: var(--progress-width);
+    }
+}
+
+
+/* Progress bar animation */
+@keyframes progressFill {
+  from {
+    width: 0%;
+    transform: scaleX(0);
+  }
+  to {
+    width: var(--target-width);
+    transform: scaleX(1);
+  }
+}
+
+/* Progress bar container hover effects */
+.progress-bar-container {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.progress-bar-container:hover {
+  transform: translateY(-1px);
+}
+
+/* Progress bar glow effects */
+.progress-bar-glow {
+  position: relative;
+  overflow: visible;
+}
+
+.progress-bar-glow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 8px currentColor;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.progress-bar-container:hover .progress-bar-glow::after {
+  opacity: 0.3;
+}
+
+/* Lig renk paleti */
+.bg-green-500 {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.bg-blue-500 {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+.bg-red-500 {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.bg-yellow-500 {
+  background: linear-gradient(90deg, #eab308, #ca8a04);
+}
+
+.bg-green-600 {
+  background: linear-gradient(90deg, #059669, #047857);
+}
+
+.bg-orange-500 {
+  background: linear-gradient(90deg, #f97316, #ea580c);
+}
+
+/* Dark mode optimizasyonları */
+.dark .progress-bar-container {
+  background-color: rgba(31, 41, 55, 0.8);
+}
+
+/* Responsive progress bars */
+@media (max-width: 768px) {
+  .progress-bar-container {
+    height: 0.75rem; /* h-3 */
+  }
+  
+  .progress-bar-glow {
+    height: 0.75rem;
+  }
+}

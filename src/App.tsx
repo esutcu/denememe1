@@ -20,7 +20,7 @@ function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <AuthProvider>
-        <Router>
+        <Router basename="/">
           <Layout>
             <Routes>
               <Route path="/" element={<Landing />} />
