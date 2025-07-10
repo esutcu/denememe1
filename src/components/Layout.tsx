@@ -2,23 +2,24 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from 'next-themes'
-import { 
-  Menu, 
-  X, 
-  Sun, 
-  Moon, 
-  BarChart3, 
-  Home, 
-  Zap, 
-  Users, 
-  Settings, 
-  LogIn, 
-  LogOut, 
+import {
+  Menu,
+  X,
+  Sun,
+  Moon,
+  BarChart3,
+  Home,
+  Zap,
+  Users,
+  Settings,
+  LogIn,
+  LogOut,
   Shield,
   Bell,
   User,
   HelpCircle,
-  ChevronDown
+  ChevronDown,
+  Trophy
 } from 'lucide-react'
 import { Button } from './ui/button'
 import { useAuth } from '../contexts/AuthContext'
@@ -44,10 +45,9 @@ const Layout = ({ children }: LayoutProps) => {
   const navigate = useNavigate()
 
   const mainNavigation = [
-    { name: 'Ana Sayfa', href: '/', icon: Home },
-    { name: 'Dashboard', href: '/dashboard', icon: BarChart3, requireAuth: true },
-    { name: 'AI Analitik', href: '/ai-analytics', icon: Zap, requireAuth: true },
-    { name: 'Hakkında', href: '/about', icon: Users },
+    { name: 'Ana Sayfa', href: '/', icon: Home, requireAuth: false },
+    { name: 'Özellikler', href: '/ai-analytics', icon: Zap, requireAuth: false },
+    { name: 'Hakkında', href: '/about', icon: Users, requireAuth: false },
   ]
 
   // Kullanıcı menüsü - sadece mevcut sayfalar

@@ -64,3 +64,23 @@ export interface LiveMatchData {
     fouls: { home: number; away: number }
   }
 }
+
+export interface AdminStats {
+  system: {
+    providers: {
+      name: string
+      priority: number
+      status: 'active' | 'inactive'
+    }[]
+  }
+}
+
+export interface AdminStats {
+  system: {
+    providers: Array<{
+      name: string
+      priority: number
+      status: 'active' | 'inactive'
+    }>
+  }
+}
