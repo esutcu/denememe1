@@ -55,7 +55,8 @@ const ProviderManager = () => {
       return;
     }
     if (isEditing) {
-      await updateProvider(selectedProvider as LLMProvider);
+      const { id, ...updates } = selectedProvider as LLMProvider;
+      await updateProvider(id, updates);
     } else {
       await addProvider(selectedProvider as Omit<LLMProvider, 'id'>);
     }
@@ -145,6 +146,7 @@ const emptyModel: Omit<LLMModel, 'id'> = {
     max_tokens: 4096,
     status: 'active',
     is_default: false,
+    created_at: '',
 };
 
 const ModelManager = () => {
@@ -176,16 +178,17 @@ const ModelManager = () => {
     };
 
     const handleSaveChanges = async () => {
-        if (!selectedModel.provider_id || !selectedModel.display_name || !selectedModel.model_name) {
-            toast.error('Lütfen Provider, Model Adı ve Model Kodu alanlarını doldurun.');
-            return;
-        }
-        if (isEditing) {
-            await updateModel(selectedModel as LLMModel);
-        } else {
-            await addModel(selectedModel as Omit<LLMModel, 'id'>);
-        }
-        setIsDialogOpen(false);
+      if (!selectedModel.provider_id || !selectedModel.display_name || !selectedModel.model_name) {
+        toast.error('Lütfen Provider, Model Adı ve Model Kodu alanlarını doldurun.');
+        return;
+      }
+      if (isEditing) {
+        const { id, ...updates } = selectedModel as LLMModel;
+        await updateModel(id, updates);
+      } else {
+        await addModel(selectedModel as Omit<LLMModel, 'id'>);
+      }
+      setIsDialogOpen(false);
     };
 
     return (
@@ -215,7 +218,7 @@ const ModelManager = () => {
                             models.map((model) => (
                                 <TableRow key={model.id} className="border-slate-700 hover:bg-slate-700/50">
                                     <TableCell>{model.display_name}</TableCell>
-                                    <TableCell>{model.llm_providers?.name || 'Bilinmiyor'}</TableCell>
+                                    <TableCell>{providers.find(p => p.id === model.provider_id)?.name || 'Bilinmiyor'}</TableCell>
                                     <TableCell><Badge className={model.status === 'active' ? 'bg-green-600' : 'bg-yellow-600'}>{model.status}</Badge></TableCell>
                                     <TableCell>{model.is_default ? 'Evet' : 'Hayır'}</TableCell>
                                     <TableCell className="text-right">
@@ -250,6 +253,10 @@ const ModelManager = () => {
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="model_name" className="text-right">Model Kodu</Label>
                             <Input id="model_name" name="model_name" value={selectedModel.model_name || ''} onChange={(e) => setSelectedModel(m => ({...m, model_name: e.target.value}))} className="col-span-3 bg-slate-700" placeholder="örn: deepseek/deepseek-r1"/>
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="cost" className="text-right">Token Başına Maliyet</Label>
+                            <Input id="cost" name="cost" type="number" value={selectedModel.cost_per_1k_tokens || 0} onChange={(e) => setSelectedModel(m => ({...m, cost_per_1k_tokens: parseFloat(e.target.value)}))} className="col-span-3 bg-slate-700"/>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="status" className="text-right">Durum</Label>

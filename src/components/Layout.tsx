@@ -390,9 +390,7 @@ const Layout = ({ children }: LayoutProps) => {
                 <Link to="/ai-analytics" className="block text-muted-foreground hover:text-foreground">
                   AI Analitik
                 </Link>
-                <Link to="/about" className="block text-muted-foreground hover:text-foreground">
-                  Hakkında
-                </Link>
+
               </div>
             </div>
             

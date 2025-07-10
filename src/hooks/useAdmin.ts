@@ -1,4 +1,3 @@
-// src/hooks/useAdmin.ts
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
@@ -21,6 +20,8 @@ export interface LLMModel {
   display_name: string
   status: 'active' | 'inactive'
   is_default: boolean
+  cost_per_1k_tokens: number
+  max_tokens: number
   created_at: string
 }
 
@@ -62,6 +63,16 @@ interface AdminStats {
     modelsTotal: number
     requestsToday: number
   }
+  system: {
+    providers: Array<{
+      name: string
+      priority: number
+      status: 'active' | 'inactive'
+    }>
+    uptime: string
+    lastBatchRun: string
+  }
+  timestamp: string
 }
 
 export function useAdmin() {
@@ -69,6 +80,87 @@ export function useAdmin() {
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [providers, setProviders] = useState<LLMProvider[]>([])
   const [models, setModels] = useState<LLMModel[]>([])
+
+  // LLM Models alma
+  const getModels = async () => {
+    setLoading(true)
+    try {
+      // Mock data for now
+      const mockModels: LLMModel[] = [
+        {
+          id: '1',
+          provider_id: '1',
+          model_name: 'deepseek/deepseek-r1',
+          display_name: 'DeepSeek R1',
+          status: 'active',
+          is_default: true,
+          cost_per_1k_tokens: 0,
+          max_tokens: 4096,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: '2',
+          provider_id: '1',
+          model_name: 'gpt-4',
+          display_name: 'GPT-4',
+          status: 'active',
+          is_default: false,
+          cost_per_1k_tokens: 0,
+          max_tokens: 4096,
+          created_at: new Date().toISOString()
+        }
+      ]
+      
+      setModels(mockModels)
+    } catch (error) {
+      console.error('Models error:', error)
+      toast.error('Model listesi yüklenemedi')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Model ekleme
+  const addModel = async (model: Omit<LLMModel, 'id' | 'created_at'>) => {
+    try {
+      // Mock implementation
+      const newModel: LLMModel = {
+        ...model,
+        id: Date.now().toString(),
+        created_at: new Date().toISOString()
+      }
+      
+      setModels(prev => [...prev, newModel])
+      toast.success('Model başarıyla eklendi')
+    } catch (error) {
+      console.error('Add model error:', error)
+      toast.error('Model eklenemedi')
+    }
+  }
+
+  // Model güncelleme
+  const updateModel = async (id: string, updates: Partial<LLMModel>) => {
+    try {
+      setModels(prev =>
+        prev.map(m => m.id === id ? { ...m, ...updates } : m)
+      )
+      toast.success('Model başarıyla güncellendi')
+    } catch (error) {
+      console.error('Update model error:', error)
+      toast.error('Model güncellenemedi')
+    }
+  }
+
+  // Model silme
+  const deleteModel = async (id: string) => {
+    try {
+      setModels(prev => prev.filter(m => m.id !== id))
+      toast.success('Model başarıyla silindi')
+    } catch (error) {
+      console.error('Delete model error:', error)
+      toast.error('Model silinemedi')
+    }
+  }
   const { user } = useAuth()
 
   // Admin stats alma
@@ -113,7 +205,13 @@ export function useAdmin() {
           providersActive: 4,
           modelsTotal: 12,
           requestsToday: 145
-        }
+        },
+        system: {
+          providers: [],
+          uptime: "24 hours",
+          lastBatchRun: "2025-07-10T00:00:00Z"
+        },
+        timestamp: new Date().toISOString()
       }
       
       setStats(mockStats)
@@ -225,9 +323,13 @@ export function useAdmin() {
     models,
     getAdminStats,
     getProviders,
+    getModels,
     addProvider,
     updateProvider,
     deleteProvider,
+    addModel,
+    updateModel,
+    deleteModel,
     triggerWeeklyBatch
   }
 }

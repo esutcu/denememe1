@@ -91,7 +91,7 @@ const AIAnalytics = () => {
   // Progress bar animasyonu için
   React.useEffect(() => {
     if (activeTab === 'performance') {
-      console.log('📊 Performance tab açıldı, progress bar animasyonu başlıyor...')
+      console.log(' Performance tab açıldı, progress bar animasyonu başlıyor...')
       
       // İlk başta tüm bar'ları 0 yap
       setProgressWidthClasses(Array(6).fill('progress-width-0'))
@@ -112,8 +112,8 @@ const AIAnalytics = () => {
     }
   }, [activeTab]) // activeTab dependency'si yeterli
   React.useEffect(() => {
-    console.log('🎨 AI Analytics renkleri yükleniyor...')
-    console.log('📊 Metrikler:', performanceMetrics)
+    console.log(' AI Analytics renkleri yükleniyor...')
+    console.log(' Metrikler:', performanceMetrics)
     
     const styleElement = document.createElement('style')
     styleElement.innerHTML = `
