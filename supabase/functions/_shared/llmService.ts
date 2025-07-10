@@ -1,6 +1,15 @@
 // supabase/functions/shared/llmService.ts
 // OpenRouter LLM Service with 4 Failover APIs
 
+/// <reference path="./types.d.ts" />
+
+// Fallback declaration for Deno if types are not available
+declare const Deno: {
+  env: {
+    get(key: string): string | undefined;
+  };
+};
+
 interface LLMProvider {
   name: string
   apiKey: string
@@ -229,14 +238,14 @@ Bu verileri analiz ederek maç tahminini JSON formatında ver.`
   }
 
   // Alternative models untuk farklı senaryolar
-  async generatePredictionWithMultipleModels(matchData: MatchPredictionPrompt): Promise<LLMResponse[]> {
+  async generatePredictionWithMultipleModels(matchData: MatchPredictionPrompt): Promise<(LLMResponse & { model: string })[]> {
     const models = [
       'deepseek/deepseek-r1',
       'deepseek/deepseek-chat-v3-0324',
       'mistralai/mistral-small-3.2-24b-instruct:free'
     ]
 
-    const predictions = []
+    const predictions: (LLMResponse & { model: string })[] = []
     
     for (const model of models) {
       const request = this.createFootballPredictionPrompt(matchData)
