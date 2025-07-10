@@ -411,12 +411,12 @@ const Layout = ({ children }: LayoutProps) => {
             <div className="space-y-3">
               <h4 className="font-medium">Yasal</h4>
               <div className="space-y-2 text-sm">
-                <a href="#" className="block text-muted-foreground hover:text-foreground">
+                <Link to="/privacy-policy" className="block text-muted-foreground hover:text-foreground">
                   Gizlilik Politikası
-                </a>
-                <a href="#" className="block text-muted-foreground hover:text-foreground">
+                </Link>
+                <Link to="/terms-of-use" className="block text-muted-foreground hover:text-foreground">
                   Kullanım Şartları
-                </a>
+                </Link>
               </div>
             </div>
           </div>
