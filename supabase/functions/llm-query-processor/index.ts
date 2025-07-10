@@ -247,7 +247,7 @@ serve(async (req) => {
     const { result, provider, model, tokens } = await callOpenRouterAPI(prompt, providers, models)
     const processingTime = Date.now() - startTime
 
-    // Store prediction in cache
+    // Store prediction in cache, mapping to the correct schema
     const { data: prediction, error: insertError } = await supabase
       .from('match_predictions')
       .insert({
@@ -256,21 +256,36 @@ serve(async (req) => {
         away_team: matchData.away_team,
         league_name: matchData.league_name,
         match_date: matchData.match_date,
-        llm_provider_id: provider.id,
-        llm_model_id: model.id,
-        llm_provider_name: provider.name,
-        llm_model_name: model.model_name,
-        prediction_result: result,
-        match_context: {
+        
+        // LLM and provider info
+        llm_provider: provider.name,
+        llm_model: model.model_name,
+        
+        // Flattened prediction results
+        winner_prediction: result.winner,
+        winner_confidence: result.winner_confidence,
+        over_under_prediction: result.over_under,
+        over_under_line: result.over_under_line,
+        predicted_home_goals: result.score_prediction.home,
+        predicted_away_goals: result.score_prediction.away,
+        
+        // Detailed analysis
+        analysis_summary: result.analysis,
+        key_factors: { factors: result.key_factors }, // Wrap array in a JSON object
+        risk_assessment: result.risk_level,
+        
+        // Context data
+        form_analysis: {
           home_last_5: matchData.home_last_5 || [],
-          away_last_5: matchData.away_last_5 || [],
-          head_to_head: matchData.head_to_head || [],
-          league_stats: matchData.league_stats || {}
+          away_last_5: matchData.away_last_5 || []
         },
+        head_to_head: {
+          meetings: matchData.head_to_head || []
+        },
+        
+        // Performance tracking
         processing_time_ms: processingTime,
-        prompt_tokens: tokens.prompt_tokens,
-        completion_tokens: tokens.completion_tokens,
-        total_cost: 0.000 // Free models
+        tokens_used: tokens.total_tokens
       })
       .select()
       .single()
@@ -284,8 +299,8 @@ serve(async (req) => {
     await supabase
       .from('llm_providers')
       .update({ 
-        last_success_at: new Date().toISOString(),
-        last_error: null 
+        last_used_at: new Date().toISOString(),
+        error_count: 0 // Reset error count on success
       })
       .eq('id', provider.id)
 

@@ -1,17 +1,13 @@
-import { serve } from 'https://deno.land/std@0.208.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-interface UserLimits {
-  userId: string
-  planType: string
-  dailyLimit: number
-  currentUsage: number
-  remainingPredictions: number
-  hasLimitReached: boolean
-  canMakePrediction: boolean
-  planFeatures: any
-  subscriptionStatus: string
-  periodEnd?: string
+import { serve } from 'https://deno.land/std@0.208.0/http/server.ts'
+import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+// Function to verify admin user
+async function isAdmin(supabase: SupabaseClient, token: string): Promise<boolean> {
+  const { data: { user }, error } = await supabase.auth.getUser(token)
+  if (error || !user) return false
+  // This logic should match your RLS policies for admin access
+  return user.email?.endsWith('@admin.scoreresultsai.com') || user.email === 'your_admin_email@example.com'
 }
 
 serve(async (req) => {
@@ -28,104 +24,102 @@ serve(async (req) => {
       })
     }
 
-    if (req.method !== 'POST' && req.method !== 'GET') {
-      return new Response('Method not allowed', { status: 405 })
-    }
-
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-    // Get user from JWT token
+    // Verify admin user
     const authHeader = req.headers.get('authorization')
     if (!authHeader) {
       return new Response('Authorization required', { status: 401 })
     }
-
     const token = authHeader.replace('Bearer ', '')
-    const { data: { user }, error: userError } = await supabase.auth.getUser(token)
-    
-    if (userError || !user) {
-      return new Response('Invalid token', { status: 401 })
+    if (!(await isAdmin(supabase, token))) {
+      return new Response('Access denied: Admin role required', { status: 403 })
     }
 
-    // Get user subscription
-    const { data: subscription, error: subError } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
-      .single()
+    // --- Fetch all stats in parallel ---
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const today = new Date().toISOString().split('T')[0]
 
-    // Default plan if no subscription found
-    const planType = subscription?.plan_type || 'free'
-    const planLimits = {
-      free: {
-        dailyLimit: 5,
-        features: {
-          leagues: ['Premier League', 'Süper Lig'],
-          aiAnalysis: 'basic',
-          support: 'community'
-        }
-      },
-      basic: {
-        dailyLimit: 50,
-        features: {
-          leagues: ['All Major Leagues'],
-          aiAnalysis: 'advanced',
-          support: 'email',
-          emailNotifications: true
-        }
-      },
-      pro: {
-        dailyLimit: 200,
-        features: {
-          leagues: ['All Leagues + Special Competitions'],
-          aiAnalysis: 'premium',
-          support: 'priority',
-          emailNotifications: true,
-          apiAccess: true,
-          customReports: true
-        }
+    const [
+      predictionsRes,
+      predictions24hRes,
+      activeCacheRes,
+      subscriptionsRes,
+      usageRes,
+      providersRes,
+      lastBatchRunRes,
+      totalUsersRes
+    ] = await Promise.all([
+      supabase.from('match_predictions').select('id', { count: 'exact', head: true }),
+      supabase.from('match_predictions').select('id', { count: 'exact', head: true }).gt('created_at', yesterday.toISOString()),
+      supabase.from('match_predictions').select('id', { count: 'exact', head: true }).eq('is_expired', false),
+      supabase.from('subscriptions').select('plan_type'),
+      supabase.from('user_usage').select('prediction_requests, cache_hits').eq('date', today),
+      supabase.from('llm_providers').select('name, status, priority').order('priority'),
+      supabase.from('batch_runs').select('completed_at').eq('status', 'completed').order('completed_at', { ascending: false }).limit(1).single(),
+      supabase.auth.admin.listUsers()
+    ])
+
+    // --- Process stats ---
+
+    // Predictions
+    const predictions = {
+      total: predictionsRes.count ?? 0,
+      last24h: predictions24hRes.count ?? 0,
+      activeCache: activeCacheRes.count ?? 0,
+    }
+
+    // Users and Subscriptions
+    const subs = subscriptionsRes.data || []
+    const users = {
+      total: totalUsersRes.data?.users?.length ?? 0,
+      subscriptions: {
+        free: (totalUsersRes.data?.users?.length ?? 0) - subs.length,
+        basic: subs.filter(s => s.plan_type === 'basic').length,
+        pro: subs.filter(s => s.plan_type === 'pro').length,
+        premium: subs.filter(s => s.plan_type === 'premium').length,
+        total: subs.length,
       }
     }
 
-    const currentPlan = planLimits[planType as keyof typeof planLimits] || planLimits.free
-    const dailyLimit = subscription?.daily_prediction_limit || currentPlan.dailyLimit
-
-    // Get today's usage
-    const today = new Date().toISOString().split('T')[0]
-    const { data: usage, error: usageError } = await supabase
-      .from('user_usage')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('date', today)
-      .single()
-
-    const currentUsage = usage?.prediction_requests || 0
-    const remainingPredictions = Math.max(0, dailyLimit - currentUsage)
-    const hasLimitReached = currentUsage >= dailyLimit
-    const canMakePrediction = !hasLimitReached
-
-    const result: UserLimits = {
-      userId: user.id,
-      planType,
-      dailyLimit,
-      currentUsage,
-      remainingPredictions,
-      hasLimitReached,
-      canMakePrediction,
-      planFeatures: currentPlan.features,
-      subscriptionStatus: subscription?.status || 'none',
-      periodEnd: subscription?.current_period_end
+    // Usage
+    const dailyUsage = usageRes.data || []
+    const totalRequests = dailyUsage.reduce((acc, u) => acc + u.prediction_requests, 0)
+    const totalCacheHits = dailyUsage.reduce((acc, u) => acc + u.cache_hits, 0)
+    const cacheHitRate = totalRequests > 0 ? Math.round((totalCacheHits / totalRequests) * 100) : 0
+    
+    const usage = {
+      today: {
+        totalRequests,
+        averagePerUser: users.total > 0 ? parseFloat((totalRequests / users.total).toFixed(2)) : 0,
+        planBreakdown: { free: 0, basic: 0, pro: 0, premium: 0 } // Note: This requires joining usage with subscriptions, skipping for now.
+      },
+      cacheHitRate,
     }
 
-    console.log(`User ${user.id} limits: ${currentUsage}/${dailyLimit} (${planType})`)
+    // System
+    const system = {
+      providers: providersRes.data || [],
+      uptime: '99.9%', // Placeholder
+      lastBatchRun: lastBatchRunRes.data?.completed_at || 'N/A',
+    }
+
+    const finalStats = {
+      predictions,
+      users,
+      usage,
+      system,
+      timestamp: new Date().toISOString(),
+    }
 
     return new Response(
       JSON.stringify({
         success: true,
-        data: result
+        data: finalStats
       }),
       {
         status: 200,
@@ -137,8 +131,7 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('User Limit Check Error:', error)
-    
+    console.error('Admin Stats Error:', error)
     return new Response(
       JSON.stringify({
         success: false,

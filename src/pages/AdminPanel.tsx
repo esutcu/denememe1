@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useAdmin } from '../hooks/useAdmin'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
@@ -27,7 +28,8 @@ import {
   RefreshCw,
   Zap,
   Brain,
-  Clock
+  Clock,
+  Settings
 } from 'lucide-react'
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444']
@@ -76,7 +78,7 @@ export default function AdminPanel() {
           </div>
           <div className="flex gap-3">
             <Button 
-              onClick={getAdminStats} 
+              onClick={() => getAdminStats()} 
               variant="outline" 
               disabled={loading}
               className="border-slate-600 text-white hover:bg-slate-700"
@@ -92,6 +94,12 @@ export default function AdminPanel() {
               <Zap className="h-4 w-4 mr-2" />
               Batch Çalıştır
             </Button>
+            <Link to="/admin/llm">
+              <Button variant="secondary" className="bg-slate-700 hover:bg-slate-600">
+                <Settings className="h-4 w-4 mr-2" />
+                LLM Yönetimi
+              </Button>
+            </Link>
           </div>
         </div>
 

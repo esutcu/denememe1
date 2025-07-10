@@ -12,6 +12,7 @@ import About from './pages/About'
 import Auth from './pages/Auth'
 import AuthCallback from './pages/AuthCallback'
 import AdminPanel from './pages/AdminPanel'
+import AdminLLMPage from './pages/AdminLLM'
 import NotFound from './pages/NotFound'
 import './App.css'
 
@@ -31,6 +32,7 @@ function App() {
               <Route path="/auth" element={<Auth />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/admin/llm" element={<AdminLLMPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>

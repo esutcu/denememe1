@@ -29,11 +29,11 @@ interface TeamStats {
   injuries: any[]
 }
 
-interface BatchJob {
+interface BatchRun {
   id: string
-  job_type: string
+  run_type: string
   status: string
-  config: any
+  details: any
 }
 
 // Major leagues to process (expandable)
@@ -173,6 +173,30 @@ async function fetchTeamData(teamId: number, leagueId: number, apiKey: string): 
   }
 }
 
+// Fetch Head-to-Head data
+async function fetchH2HData(homeTeamId: number, awayTeamId: number, apiKey: string): Promise<any[]> {
+  try {
+    const response = await fetch(
+      `${API_FOOTBALL_BASE_URL}/fixtures/headtohead?h2h=${homeTeamId}-${awayTeamId}&last=5`,
+      {
+        headers: {
+          'X-RapidAPI-Key': apiKey,
+          'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+        }
+      }
+    )
+    if (!response.ok) {
+      console.error(`API-Football H2H error for ${homeTeamId} vs ${awayTeamId}:`, response.status)
+      return []
+    }
+    const data = await response.json()
+    return data.response || []
+  } catch (error) {
+    console.error(`Error fetching H2H data for ${homeTeamId} vs ${awayTeamId}:`, error)
+    return []
+  }
+}
+
 // Process single fixture and generate prediction
 async function processFixture(
   fixture: Fixture, 
@@ -196,12 +220,13 @@ async function processFixture(
       return { success: true }
     }
     
-    // Fetch team data
+    // Fetch team and H2H data
     console.log(`Fetching data for ${fixture.teams.home.name} vs ${fixture.teams.away.name}`)
     
-    const [homeTeamData, awayTeamData] = await Promise.all([
+    const [homeTeamData, awayTeamData, h2hData] = await Promise.all([
       fetchTeamData(fixture.teams.home.id, fixture.league.id, apiKey),
-      fetchTeamData(fixture.teams.away.id, fixture.league.id, apiKey)
+      fetchTeamData(fixture.teams.away.id, fixture.league.id, apiKey),
+      fetchH2HData(fixture.teams.home.id, fixture.teams.away.id, apiKey)
     ])
     
     // Prepare match data for LLM
@@ -227,7 +252,13 @@ async function processFixture(
         goals_against: match.teams.away.id === fixture.teams.away.id ? match.goals.home : match.goals.away,
         opponent: match.teams.away.id === fixture.teams.away.id ? match.teams.home.name : match.teams.away.name
       })) || [],
-      head_to_head: [], // TODO: Fetch H2H data
+      head_to_head: h2hData.map(match => ({
+        date: match.fixture.date,
+        home_team: match.teams.home.name,
+        away_team: match.teams.away.name,
+        home_score: match.goals.home,
+        away_score: match.goals.away
+      })) || [],
       league_stats: {
         home_team_stats: homeTeamData?.season_stats || {},
         away_team_stats: awayTeamData?.season_stats || {},
@@ -274,9 +305,9 @@ async function processFixture(
 async function cleanupExpiredCache(supabase: any): Promise<number> {
   const { data, error } = await supabase
     .from('match_predictions')
-    .update({ is_active: false })
+    .update({ is_expired: true })
     .lt('cache_expires_at', new Date().toISOString())
-    .eq('is_active', true)
+    .eq('is_expired', false)
     .select('id')
   
   if (error) {
@@ -319,26 +350,25 @@ serve(async (req) => {
     }
 
     // Create batch job record
-    const { data: batchJob, error: jobError } = await supabase
-      .from('batch_jobs')
+    const { data: batchRun, error: runError } = await supabase
+      .from('batch_runs')
       .insert({
-        job_type: 'weekly_predictions',
+        run_type: 'weekly_predictions',
         status: 'running',
-        config: {
+        details: {
           leagues: SUPPORTED_LEAGUES.map(l => l.id),
           triggered_by: 'manual' // or 'cron'
-        },
-        started_at: new Date().toISOString()
+        }
       })
       .select()
       .single()
 
-    if (jobError) {
-      console.error('Failed to create batch job:', jobError)
+    if (runError) {
+      console.error('Failed to create batch job:', runError)
       return new Response('Failed to create batch job', { status: 500 })
     }
 
-    console.log(`Starting weekly batch job ${batchJob.id}`)
+    console.log(`Starting weekly batch job ${batchRun.id}`)
 
     let processedItems = 0
     let successfulItems = 0
@@ -359,7 +389,7 @@ serve(async (req) => {
         
         // Update job as completed
         await supabase
-          .from('batch_jobs')
+          .from('batch_runs')
           .update({
             status: 'completed',
             completed_at: new Date().toISOString(),
@@ -367,13 +397,13 @@ serve(async (req) => {
             successful_items: 0,
             failed_items: 0
           })
-          .eq('id', batchJob.id)
+          .eq('id', batchRun.id)
 
         return new Response(
           JSON.stringify({
             success: true,
             message: 'No fixtures to process',
-            job_id: batchJob.id,
+            job_id: batchRun.id,
             stats: { processed: 0, successful: 0, failed: 0 }
           }),
           {
@@ -406,14 +436,14 @@ serve(async (req) => {
         // Update progress periodically
         if (processedItems % 10 === 0) {
           await supabase
-            .from('batch_jobs')
+            .from('batch_runs')
             .update({
               processed_items: processedItems,
               successful_items: successfulItems,
               failed_items: failedItems,
               errors: errors
             })
-            .eq('id', batchJob.id)
+            .eq('id', batchRun.id)
           
           console.log(`Progress: ${processedItems}/${fixtures.length} processed`)
         }
@@ -424,7 +454,7 @@ serve(async (req) => {
 
       // Final job update
       await supabase
-        .from('batch_jobs')
+        .from('batch_runs')
         .update({
           status: 'completed',
           completed_at: new Date().toISOString(),
@@ -433,14 +463,14 @@ serve(async (req) => {
           failed_items: failedItems,
           errors: errors
         })
-        .eq('id', batchJob.id)
+        .eq('id', batchRun.id)
 
       console.log(`Batch job completed. Processed: ${processedItems}, Success: ${successfulItems}, Failed: ${failedItems}`)
 
       return new Response(
         JSON.stringify({
           success: true,
-          job_id: batchJob.id,
+          job_id: batchRun.id,
           message: 'Weekly predictions generated successfully',
           stats: {
             processed: processedItems,
@@ -464,7 +494,7 @@ serve(async (req) => {
       
       // Update job as failed
       await supabase
-        .from('batch_jobs')
+        .from('batch_runs')
         .update({
           status: 'failed',
           completed_at: new Date().toISOString(),
@@ -473,7 +503,7 @@ serve(async (req) => {
           failed_items: failedItems,
           errors: [...errors, batchError.message]
         })
-        .eq('id', batchJob.id)
+        .eq('id', batchRun.id)
 
       throw batchError
     }
