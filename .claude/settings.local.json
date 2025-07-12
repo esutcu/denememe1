@@ -14,7 +14,11 @@
       "Bash(git remote:*)",
       "Bash(ls:*)",
       "Bash(zip:*)",
-      "Bash(tar:*)"
+      "Bash(tar:*)",
+      "Bash(rm:*)",
+      "Bash(rd:*)",
+      "Bash(npm install:*)",
+      "Bash(npx vite:*)"
     ],
     "deny": []
   }
