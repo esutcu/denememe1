@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(pkill:*)",
+      "Bash(find:*)",
+      "Bash(cp:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(git push:*)",
+      "Bash(git remote:*)",
+      "Bash(ls:*)",
+      "Bash(zip:*)",
+      "Bash(tar:*)"
+    ],
+    "deny": []
+  }
+}
