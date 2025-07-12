@@ -274,54 +274,54 @@ const handlePredictionSubmit = async (e: React.FormEvent) => {
         <div className="mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             <Card className="glass-card border-white/20 hover:glass-card-hover group transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="glass-medium rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
-                    <Calendar className="h-5 w-5 text-blue-400" />
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className="glass-medium rounded-lg sm:rounded-xl p-2 sm:p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-foreground">{stats.todayMatches}</div>
+                    <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.todayMatches}</div>
                     <div className="text-xs text-blue-400 font-medium">+12% bu hafta</div>
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-foreground mb-1">Bugünkü Maçlar</h3>
+                  <h3 className="text-xs sm:text-sm font-medium text-foreground mb-1">Bugünkü Maçlar</h3>
                   <p className="text-xs text-muted-foreground">Analiz için hazır</p>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="glass-card border-white/20 hover:glass-card-hover group transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="glass-medium rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
-                    <Activity className="h-5 w-5 text-green-400" />
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className="glass-medium rounded-lg sm:rounded-xl p-2 sm:p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-foreground">{stats.activePredictions}</div>
+                    <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.activePredictions}</div>
                     <div className="text-xs text-green-400 font-medium">5 canlı</div>
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-foreground mb-1">Aktif Tahminler</h3>
+                  <h3 className="text-xs sm:text-sm font-medium text-foreground mb-1">Aktif Tahminler</h3>
                   <p className="text-xs text-muted-foreground">Süren tahminler</p>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="glass-card border-white/20 hover:glass-card-hover group transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="glass-medium rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
-                    <TrendingUp className="h-5 w-5 text-purple-400" />
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className="glass-medium rounded-lg sm:rounded-xl p-2 sm:p-3 group-hover:scale-110 transition-transform duration-300">
+                    <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-foreground">%{stats.accuracyRate}</div>
+                    <div className="text-xl sm:text-2xl font-bold text-foreground">%{stats.accuracyRate}</div>
                     <div className="text-xs text-purple-400 font-medium">+5% bu ay</div>
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-foreground mb-1">Doğruluk Oranı</h3>
+                  <h3 className="text-xs sm:text-sm font-medium text-foreground mb-1">Doğruluk Oranı</h3>
                   <div className="mt-2">
                     <Progress value={stats.accuracyRate} className="h-1.5" />
                   </div>
@@ -330,18 +330,18 @@ const handlePredictionSubmit = async (e: React.FormEvent) => {
             </Card>
 
             <Card className="glass-card border-white/20 hover:glass-card-hover group transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="glass-medium rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
-                    <Trophy className="h-5 w-5 text-yellow-400" />
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className="glass-medium rounded-lg sm:rounded-xl p-2 sm:p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" />
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-foreground">{stats.totalLeagues}</div>
+                    <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.totalLeagues}</div>
                     <div className="text-xs text-yellow-400 font-medium">8 premium</div>
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-foreground mb-1">Ligler</h3>
+                  <h3 className="text-xs sm:text-sm font-medium text-foreground mb-1">Ligler</h3>
                   <p className="text-xs text-muted-foreground">Desteklenen lig</p>
                 </div>
               </CardContent>

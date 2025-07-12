@@ -302,7 +302,7 @@ const Landing = () => {
             <Button
               size="xl"
               onClick={() => navigate('/dashboard')}
-              className="bg-white text-slate-800 rounded-xl hover:bg-slate-100 transition-all duration-300 hover:scale-105 shadow-xl px-8 py-4"
+              className="bg-white text-slate-900 rounded-xl hover:bg-slate-50 border border-slate-200 transition-all duration-300 hover:scale-105 shadow-xl px-8 py-4 font-semibold"
             >
               Ücretsiz Başla
               <ArrowRight className="ml-2 h-4 w-4" />
