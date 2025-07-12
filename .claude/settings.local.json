@@ -18,7 +18,8 @@
       "Bash(rm:*)",
       "Bash(rd:*)",
       "Bash(npm install:*)",
-      "Bash(npx vite:*)"
+      "Bash(npx vite:*)",
+      "WebFetch(domain:gokboru.erolsutcuca.workers.dev)"
     ],
     "deny": []
   }

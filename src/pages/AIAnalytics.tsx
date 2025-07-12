@@ -283,21 +283,21 @@ const AIAnalytics = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Enhanced Professional Header */}
-        <div className="py-12 text-center">
-          <div className="inline-flex items-center gap-3 glass-medium rounded-2xl p-4 mb-6">
-            <div className="bg-slate-100 rounded-xl p-3">
-              <Layers className="h-8 w-8 text-slate-700" />
+        <div className="py-6 sm:py-8 lg:py-12 text-center">
+          <div className="inline-flex items-center gap-2 sm:gap-3 glass-medium rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6 max-w-full">
+            <div className="bg-slate-100 rounded-lg sm:rounded-xl p-2 sm:p-3 flex-shrink-0">
+              <Layers className="h-6 w-6 sm:h-8 sm:w-8 text-slate-700" />
             </div>
-            <div className="text-left">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800">
+            <div className="text-left min-w-0">
+              <h1 className="text-lg sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-slate-800 leading-tight">
                 Yapay Zeka Analiz Merkezi
               </h1>
-              <p className="text-slate-600 text-sm">Yapay Zeka Analiz Merkezi</p>
+              <p className="text-slate-600 text-xs sm:text-sm truncate">AI Analytics Center</p>
             </div>
           </div>
-          <p className="text-lg sm:text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed px-4">
+          <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-2 sm:px-4">
             Gelişmiş makine öğrenimi modelleri ve büyük veri analizi ile 
             futbol tahminlerinde yeni nesil çözümler sunuyoruz.
           </p>
@@ -305,30 +305,33 @@ const AIAnalytics = () => {
 
         <div className="mb-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 glass-card-light border-border rounded-lg">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 glass-card-light border-border rounded-lg overflow-hidden">
               <TabsTrigger 
                 value="overview"
-                className="text-slate-700 data-[state=active]:glass-medium-light data-[state=active]:text-slate-900 data-[state=active]:border-white/40 text-sm sm:text-base font-medium"
+                className="text-slate-700 data-[state=active]:glass-medium-light data-[state=active]:text-slate-900 data-[state=active]:border-white/40 text-xs sm:text-sm lg:text-base font-medium px-2 py-2 truncate"
               >
-                Genel Bakış
+                <span className="hidden sm:inline">Genel Bakış</span>
+                <span className="sm:hidden">Genel</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="features"
-                className="text-slate-700 data-[state=active]:glass-medium-light data-[state=active]:text-slate-900 data-[state=active]:border-white/40 text-sm sm:text-base font-medium"
+                className="text-slate-700 data-[state=active]:glass-medium-light data-[state=active]:text-slate-900 data-[state=active]:border-white/40 text-xs sm:text-sm lg:text-base font-medium px-2 py-2 truncate"
               >
-                Yapay Zeka Özellikleri
+                <span className="hidden sm:inline">AI Özellikleri</span>
+                <span className="sm:hidden">AI</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="performance"
-                className="text-slate-700 data-[state=active]:glass-medium-light data-[state=active]:text-slate-900 data-[state=active]:border-white/40 text-sm sm:text-base font-medium"
+                className="text-slate-700 data-[state=active]:glass-medium-light data-[state=active]:text-slate-900 data-[state=active]:border-white/40 text-xs sm:text-sm lg:text-base font-medium px-2 py-2 truncate"
               >
                 Performans
               </TabsTrigger>
               <TabsTrigger 
                 value="technology"
-                className="text-slate-700 data-[state=active]:glass-medium-light data-[state=active]:text-slate-900 data-[state=active]:border-white/40 text-sm sm:text-base font-medium"
+                className="text-slate-700 data-[state=active]:glass-medium-light data-[state=active]:text-slate-900 data-[state=active]:border-white/40 text-xs sm:text-sm lg:text-base font-medium px-2 py-2 truncate"
               >
-                Teknoloji
+                <span className="hidden sm:inline">Teknoloji</span>
+                <span className="sm:hidden">Tek</span>
               </TabsTrigger>
             </TabsList>
 
@@ -344,33 +347,33 @@ const AIAnalytics = () => {
                   />
                   <div className="absolute inset-0 bg-slate-800/20" />
                 </div>
-                <div className="relative z-10 p-12 text-center">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 inline-block mb-6">
-                    <Monitor className="h-10 w-10 sm:h-12 sm:w-12 text-slate-700 mx-auto mb-4" />
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 text-slate-800">
+                <div className="relative z-10 p-4 sm:p-6 lg:p-12 text-center">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 inline-block mb-4 sm:mb-6 max-w-full mx-2">
+                    <Monitor className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-slate-700 mx-auto mb-3 sm:mb-4" />
+                    <h2 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold mb-3 sm:mb-4 text-slate-800 leading-tight px-2">
                       Yapay Zeka Destekli Futbol Analizi
                     </h2>
-                    <p className="text-slate-600 text-base sm:text-lg mb-6 max-w-2xl px-2">
+                    <p className="text-slate-600 text-sm sm:text-base lg:text-lg mb-4 sm:mb-6 max-w-2xl px-2 leading-relaxed">
                       Gelişmiş makine öğrenimi modelleri her gün milyonlarca veri noktasını analiz ederek
                       %68+ doğruluk oranıyla tahminler üretiyor
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2">
                       <Button 
                         onClick={handlePlayDemo}
-                        className="bg-slate-800 text-foreground hover:bg-slate-700 transition-all duration-300"
-                        size="lg"
+                        className="bg-slate-800 text-foreground hover:bg-slate-700 transition-all duration-300 w-full sm:w-auto"
+                        size="default"
                       >
-                        <Play className="mr-2 h-5 w-5" />
-                        Demoyu İzle
+                        <Play className="mr-2 h-4 w-4" />
+                        <span className="truncate">Demoyu İzle</span>
                       </Button>
                       <Button 
                         variant="outline"
                         onClick={() => navigate('/dashboard')}
-                        className="border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all duration-300"
-                        size="lg"
+                        className="border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all duration-300 w-full sm:w-auto"
+                        size="default"
                       >
-                        <ArrowRight className="mr-2 h-5 w-5" />
-                        Hemen Başlayın
+                        <ArrowRight className="mr-2 h-4 w-4" />
+                        <span className="truncate">Hemen Başlayın</span>
                       </Button>
                     </div>
                   </div>
@@ -378,28 +381,28 @@ const AIAnalytics = () => {
               </div>
 
               {/* Enhanced AI Capabilities */}
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {aiCapabilities.map((capability, index) => {
                   const Icon = capability.icon
                   return (
                     <Card key={index} className="glass-card-light border-border hover:glass-card-hover-light group transition-all duration-300">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-3 text-slate-800">
-                          <div className="glass-medium-light rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
-                            <Icon className="h-6 w-6 text-slate-700" />
+                      <CardHeader className="pb-3 sm:pb-6">
+                        <CardTitle className="flex items-center gap-2 sm:gap-3 text-slate-800 text-base sm:text-lg">
+                          <div className="glass-medium-light rounded-lg sm:rounded-xl p-2 sm:p-3 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                            <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-slate-700" />
                           </div>
-                          {capability.title}
+                          <span className="leading-tight">{capability.title}</span>
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <p className="text-slate-600 mb-6">
+                      <CardContent className="pt-0">
+                        <p className="text-slate-600 mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
                           {capability.description}
                         </p>
-                        <div className="space-y-3">
+                        <div className="space-y-2 sm:space-y-3">
                           {capability.metrics.map((metric, idx) => (
-                            <div key={idx} className="flex items-center gap-3">
-                              <div className="w-2 h-2 bg-green-500 rounded-full" />
-                              <span className="text-sm text-slate-700">{metric}</span>
+                            <div key={idx} className="flex items-center gap-2 sm:gap-3">
+                              <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
+                              <span className="text-xs sm:text-sm text-slate-700 leading-relaxed">{metric}</span>
                             </div>
                           ))}
                         </div>
@@ -411,11 +414,11 @@ const AIAnalytics = () => {
             </TabsContent>
 
             {/* Features Tab */}
-            <TabsContent value="features" className="space-y-8">
-              <div className="grid lg:grid-cols-3 gap-8">
+            <TabsContent value="features" className="space-y-4 sm:space-y-6 lg:space-y-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {/* Feature List */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold mb-4 text-slate-800">AI Özellikleri</h3>
+                <div className="space-y-3 sm:space-y-4">
+                  <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-slate-800">AI Özellikleri</h3>
                   {aiFeatures.map((feature) => (
                     <Card 
                       key={feature.id}
@@ -426,14 +429,14 @@ const AIAnalytics = () => {
                       }`}
                       onClick={() => setSelectedFeature(feature)}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-12 h-12 rounded-lg ${feature.color} flex items-center justify-center text-slate-700 text-xl flex-shrink-0`}>
+                      <CardContent className="p-3 sm:p-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${feature.color} flex items-center justify-center text-slate-700 text-lg sm:text-xl flex-shrink-0`}>
                             {feature.icon}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-medium truncate text-slate-800">{feature.title}</h4>
-                            <p className="text-sm text-slate-600 truncate">{feature.description}</p>
+                            <h4 className="font-medium text-sm sm:text-base truncate text-slate-800">{feature.title}</h4>
+                            <p className="text-xs sm:text-sm text-slate-600 truncate">{feature.description}</p>
                           </div>
                           <ChevronRight className="h-4 w-4 text-slate-500 flex-shrink-0" />
                         </div>
@@ -445,18 +448,18 @@ const AIAnalytics = () => {
                 {/* Selected Feature Details */}
                 <div className="lg:col-span-2">
                   <Card className="h-full glass-card-light border-border">
-                    <CardHeader>
-                      <div className="flex items-center gap-3">
-                        <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${selectedFeature.color} flex items-center justify-center text-foreground text-2xl`}>
+                    <CardHeader className="pb-3 sm:pb-6">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg sm:rounded-xl bg-gradient-to-r ${selectedFeature.color} flex items-center justify-center text-foreground text-xl sm:text-2xl flex-shrink-0`}>
                           {selectedFeature.icon}
                         </div>
-                        <div>
-                          <CardTitle className="text-2xl text-slate-800">{selectedFeature.title}</CardTitle>
-                          <p className="text-slate-600 mt-1">{selectedFeature.description}</p>
+                        <div className="min-w-0">
+                          <CardTitle className="text-lg sm:text-xl lg:text-2xl text-slate-800 leading-tight">{selectedFeature.title}</CardTitle>
+                          <p className="text-slate-600 mt-1 text-sm sm:text-base leading-relaxed">{selectedFeature.description}</p>
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent className="space-y-6">
+                    <CardContent className="space-y-4 sm:space-y-6 pt-0">
                       {/* Feature Image - FIX: Resmi kare içine tam oturtma */}
                       <div className="relative rounded-lg overflow-hidden bg-slate-100 aspect-video flex items-center justify-center">
                         <img 
@@ -472,12 +475,12 @@ const AIAnalytics = () => {
 
                       {/* Benefits */}
                       <div>
-                        <h4 className="font-semibold mb-3 text-slate-800">Temel Avantajlar</h4>
+                        <h4 className="font-semibold mb-2 sm:mb-3 text-slate-800 text-sm sm:text-base">Temel Avantajlar</h4>
                         <div className="space-y-2">
                           {selectedFeature.benefits.map((benefit, idx) => (
-                            <div key={idx} className="flex items-center gap-2">
-                              <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                              <span className="text-sm text-slate-700">{benefit}</span>
+                            <div key={idx} className="flex items-start gap-2">
+                              <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                              <span className="text-xs sm:text-sm text-slate-700 leading-relaxed">{benefit}</span>
                             </div>
                           ))}
                         </div>
@@ -496,54 +499,54 @@ const AIAnalytics = () => {
             {/* Performance Tab */}
             <TabsContent value="performance" className="space-y-8">
               {/* Performance Overview */}
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <Card className="glass-card-light border-border hover:glass-card-hover-light group transition-all duration-300">
-                  <CardHeader>
+                  <CardHeader className="pb-2 sm:pb-6">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="flex items-center gap-2 text-slate-800">
-                        <div className="glass-medium-light rounded-lg p-2 group-hover:scale-110 transition-transform duration-300">
-                          <Target className="h-5 w-5 text-green-600" />
+                      <CardTitle className="flex items-center gap-2 text-slate-800 text-sm sm:text-base">
+                        <div className="glass-medium-light rounded-lg p-2 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                          <Target className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
                         </div>
-                        Genel Doğruluk
+                        <span className="truncate">Genel Doğruluk</span>
                       </CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-3xl font-bold text-green-600 mb-2">%78.4</div>
-                    <div className="flex items-center gap-1 text-sm text-green-600">
-                      <TrendingUp className="h-4 w-4" />
+                  <CardContent className="pt-0">
+                    <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-1 sm:mb-2">%78.4</div>
+                    <div className="flex items-center gap-1 text-xs sm:text-sm text-green-600">
+                      <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
                       +2.3% bu ay
                     </div>
                   </CardContent>
                 </Card>
 
                 <Card className="glass-card-light border-border hover:glass-card-hover-light group transition-all duration-300">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-800">
-                      <div className="glass-medium-light rounded-lg p-2 group-hover:scale-110 transition-transform duration-300">
-                        <BarChart3 className="h-5 w-5 text-orange-600" />
+                  <CardHeader className="pb-2 sm:pb-6">
+                    <CardTitle className="flex items-center gap-2 text-slate-800 text-sm sm:text-base">
+                      <div className="glass-medium-light rounded-lg p-2 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                        <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 text-orange-600" />
                       </div>
-                      İşlenen Maç
+                      <span className="truncate">İşlenen Maç</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-3xl font-bold text-orange-600 mb-2">12,458</div>
-                    <div className="text-sm text-slate-600">Son 30 gün</div>
+                  <CardContent className="pt-0">
+                    <div className="text-2xl sm:text-3xl font-bold text-orange-600 mb-1 sm:mb-2">12,458</div>
+                    <div className="text-xs sm:text-sm text-slate-600">Son 30 gün</div>
                   </CardContent>
                 </Card>
 
-                <Card className="glass-card-light border-border hover:glass-card-hover-light group transition-all duration-300">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-800">
-                      <div className="glass-medium-light rounded-lg p-2 group-hover:scale-110 transition-transform duration-300">
-                        <Gauge className="h-5 w-5 text-amber-600" />
+                <Card className="glass-card-light border-border hover:glass-card-hover-light group transition-all duration-300 sm:col-span-2 lg:col-span-1">
+                  <CardHeader className="pb-2 sm:pb-6">
+                    <CardTitle className="flex items-center gap-2 text-slate-800 text-sm sm:text-base">
+                      <div className="glass-medium-light rounded-lg p-2 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                        <Gauge className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600" />
                       </div>
-                      Ortalama Hız
+                      <span className="truncate">Ortalama Hız</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-3xl font-bold text-amber-600 mb-2">89ms</div>
-                    <div className="text-sm text-slate-600">Tahmin süresi</div>
+                  <CardContent className="pt-0">
+                    <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1 sm:mb-2">89ms</div>
+                    <div className="text-xs sm:text-sm text-slate-600">Tahmin süresi</div>
                   </CardContent>
                 </Card>
               </div>
@@ -605,28 +608,28 @@ const AIAnalytics = () => {
                   </div>
                   
                   {/* Performans özeti */}
-                  <div className="mt-8 p-4 bg-slate-50 rounded-lg">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-slate-50 rounded-lg">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-center">
                       <div>
-                        <div className="text-2xl font-bold text-green-600">
+                        <div className="text-xl sm:text-2xl font-bold text-green-600">
                           {performanceMetrics.filter(m => m.value >= 80).length}
                         </div>
                         <div className="text-xs text-slate-600">Mükemmel</div>
                       </div>
                       <div>
-                        <div className="text-2xl font-bold text-blue-600">
+                        <div className="text-xl sm:text-2xl font-bold text-blue-600">
                           {performanceMetrics.filter(m => m.value >= 75 && m.value < 80).length}
                         </div>
                         <div className="text-xs text-slate-600">İyi</div>
                       </div>
                       <div>
-                        <div className="text-2xl font-bold text-orange-600">
+                        <div className="text-xl sm:text-2xl font-bold text-orange-600">
                           {performanceMetrics.filter(m => m.value < 75).length}
                         </div>
                         <div className="text-xs text-slate-600">Geliştirilmeli</div>
                       </div>
                       <div>
-                        <div className="text-2xl font-bold text-purple-600">
+                        <div className="text-xl sm:text-2xl font-bold text-purple-600">
                           {Math.round(performanceMetrics.reduce((acc, m) => acc + m.value, 0) / performanceMetrics.length)}%
                         </div>
                         <div className="text-xs text-slate-600">Ortalama</div>
@@ -640,33 +643,33 @@ const AIAnalytics = () => {
             {/* Enhanced Technology Tab */}
             <TabsContent value="technology" className="space-y-8">
               {/* Tech Stack */}
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
                 <Card className="glass-card-light border-border">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-800">
-                      <div className="glass-medium-light rounded-lg p-2">
-                        <Layers className="h-5 w-5 text-emerald-700" />
+                    <CardTitle className="flex items-center gap-2 text-slate-800 text-base sm:text-lg">
+                      <div className="glass-medium-light rounded-lg p-2 flex-shrink-0">
+                        <Layers className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-700" />
                       </div>
-                      Makine Öğrenimi Modelleri
+                      <span className="truncate">Makine Öğrenimi Modelleri</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-4">
-                      <div className="glass-medium-light rounded-xl p-4 hover:scale-105 transition-transform duration-300">
-                        <div className="font-medium text-slate-800 mb-1">LLM Topluluğu</div>
-                        <div className="text-sm text-slate-600">12 farklı büyük dil modeli kombinasyonu</div>
+                  <CardContent className="space-y-3 sm:space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="glass-medium-light rounded-lg sm:rounded-xl p-3 sm:p-4 hover:scale-105 transition-transform duration-300">
+                        <div className="font-medium text-slate-800 mb-1 text-sm sm:text-base">LLM Topluluğu</div>
+                        <div className="text-xs sm:text-sm text-slate-600 leading-relaxed">12 farklı büyük dil modeli kombinasyonu</div>
                       </div>
-                      <div className="glass-medium-light rounded-xl p-4 hover:scale-105 transition-transform duration-300">
-                        <div className="font-medium text-slate-800 mb-1">Derin Sinir Ağları</div>
-                        <div className="text-sm text-slate-600">Gelişmiş derin öğrenme mimarisi</div>
+                      <div className="glass-medium-light rounded-lg sm:rounded-xl p-3 sm:p-4 hover:scale-105 transition-transform duration-300">
+                        <div className="font-medium text-slate-800 mb-1 text-sm sm:text-base">Derin Sinir Ağları</div>
+                        <div className="text-xs sm:text-sm text-slate-600 leading-relaxed">Gelişmiş derin öğrenme mimarisi</div>
                       </div>
-                      <div className="glass-medium-light rounded-xl p-4 hover:scale-105 transition-transform duration-300">
-                        <div className="font-medium text-slate-800 mb-1">Ensemble Modelleri</div>
-                        <div className="text-sm text-slate-600">Birleşik model öğrenme algoritması</div>
+                      <div className="glass-medium-light rounded-lg sm:rounded-xl p-3 sm:p-4 hover:scale-105 transition-transform duration-300">
+                        <div className="font-medium text-slate-800 mb-1 text-sm sm:text-base">Ensemble Modelleri</div>
+                        <div className="text-xs sm:text-sm text-slate-600 leading-relaxed">Birleşik model öğrenme algoritması</div>
                       </div>
-                      <div className="glass-medium-light rounded-xl p-4 hover:scale-105 transition-transform duration-300">
-                        <div className="font-medium text-slate-800 mb-1">Gradient Boosting</div>
-                        <div className="text-sm text-slate-600">Adaptif artırmalı öğrenme yöntemi</div>
+                      <div className="glass-medium-light rounded-lg sm:rounded-xl p-3 sm:p-4 hover:scale-105 transition-transform duration-300">
+                        <div className="font-medium text-slate-800 mb-1 text-sm sm:text-base">Gradient Boosting</div>
+                        <div className="text-xs sm:text-sm text-slate-600 leading-relaxed">Adaptif artırmalı öğrenme yöntemi</div>
                       </div>
                     </div>
                   </CardContent>
@@ -674,30 +677,30 @@ const AIAnalytics = () => {
 
                 <Card className="glass-card-light border-border">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-800">
-                      <div className="glass-medium-light rounded-lg p-2">
-                        <Database className="h-5 w-5 text-green-700" />
+                    <CardTitle className="flex items-center gap-2 text-slate-800 text-base sm:text-lg">
+                      <div className="glass-medium-light rounded-lg p-2 flex-shrink-0">
+                        <Database className="h-4 w-4 sm:h-5 sm:w-5 text-green-700" />
                       </div>
-                      Veri Kaynakları
+                      <span className="truncate">Veri Kaynakları</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-4">
-                      <div className="glass-medium-light rounded-xl p-4 hover:scale-105 transition-transform duration-300">
-                        <div className="font-medium text-slate-800 mb-1">API-Football</div>
-                        <div className="text-sm text-slate-600">Gerçek zamanlı maç verileri ve canlı skorlar</div>
+                  <CardContent className="space-y-3 sm:space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="glass-medium-light rounded-lg sm:rounded-xl p-3 sm:p-4 hover:scale-105 transition-transform duration-300">
+                        <div className="font-medium text-slate-800 mb-1 text-sm sm:text-base">API-Football</div>
+                        <div className="text-xs sm:text-sm text-slate-600 leading-relaxed">Gerçek zamanlı maç verileri ve canlı skorlar</div>
                       </div>
-                      <div className="glass-medium-light rounded-xl p-4 hover:scale-105 transition-transform duration-300">
-                        <div className="font-medium text-slate-800 mb-1">Tarihsel Veritabanı</div>
-                        <div className="text-sm text-slate-600">10+ yıllık kapsamlı maç geçmişi</div>
+                      <div className="glass-medium-light rounded-lg sm:rounded-xl p-3 sm:p-4 hover:scale-105 transition-transform duration-300">
+                        <div className="font-medium text-slate-800 mb-1 text-sm sm:text-base">Tarihsel Veritabanı</div>
+                        <div className="text-xs sm:text-sm text-slate-600 leading-relaxed">10+ yıllık kapsamlı maç geçmişi</div>
                       </div>
-                      <div className="glass-medium-light rounded-xl p-4 hover:scale-105 transition-transform duration-300">
-                        <div className="font-medium text-slate-800 mb-1">Oyuncu Metrikleri</div>
-                        <div className="text-sm text-slate-600">Detaylı performans ve İstatistik verileri</div>
+                      <div className="glass-medium-light rounded-lg sm:rounded-xl p-3 sm:p-4 hover:scale-105 transition-transform duration-300">
+                        <div className="font-medium text-slate-800 mb-1 text-sm sm:text-base">Oyuncu Metrikleri</div>
+                        <div className="text-xs sm:text-sm text-slate-600 leading-relaxed">Detaylı performans ve İstatistik verileri</div>
                       </div>
-                      <div className="glass-medium-light rounded-xl p-4 hover:scale-105 transition-transform duration-300">
-                        <div className="font-medium text-slate-800 mb-1">Taktik Analizi</div>
-                        <div className="text-sm text-slate-600">Takım stratejileri ve oyun tarzları</div>
+                      <div className="glass-medium-light rounded-lg sm:rounded-xl p-3 sm:p-4 hover:scale-105 transition-transform duration-300">
+                        <div className="font-medium text-slate-800 mb-1 text-sm sm:text-base">Taktik Analizi</div>
+                        <div className="text-xs sm:text-sm text-slate-600 leading-relaxed">Takım stratejileri ve oyun tarzları</div>
                       </div>
                     </div>
                   </CardContent>
@@ -715,33 +718,33 @@ const AIAnalytics = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid md:grid-cols-3 gap-8 text-center">
-                    <div className="space-y-4">
-                      <div className="glass-medium-light rounded-2xl p-6 mx-auto inline-block hover:scale-105 transition-transform duration-300">
-                        <Database className="h-10 w-10 text-orange-600 mx-auto" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 text-center">
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="glass-medium-light rounded-xl sm:rounded-2xl p-4 sm:p-6 mx-auto inline-block hover:scale-105 transition-transform duration-300">
+                        <Database className="h-8 w-8 sm:h-10 sm:w-10 text-orange-600 mx-auto" />
                       </div>
-                      <h4 className="font-semibold text-slate-800 text-lg">Veri Toplama</h4>
-                      <p className="text-sm text-slate-600 leading-relaxed">
+                      <h4 className="font-semibold text-slate-800 text-base sm:text-lg">Veri Toplama</h4>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed px-2">
                         API-Football ve geçmiş veri kaynaklarından 
                         gerçek zamanlı veri toplama
                       </p>
                     </div>
-                    <div className="space-y-4">
-                      <div className="glass-medium-light rounded-2xl p-6 mx-auto inline-block hover:scale-105 transition-transform duration-300">
-                        <Layers className="h-10 w-10 text-green-600 mx-auto" />
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="glass-medium-light rounded-xl sm:rounded-2xl p-4 sm:p-6 mx-auto inline-block hover:scale-105 transition-transform duration-300">
+                        <Layers className="h-8 w-8 sm:h-10 sm:w-10 text-green-600 mx-auto" />
                       </div>
-                      <h4 className="font-semibold text-slate-800 text-lg">Yapay Zeka İşleme</h4>
-                      <p className="text-sm text-slate-600 leading-relaxed">
+                      <h4 className="font-semibold text-slate-800 text-base sm:text-lg">Yapay Zeka İşleme</h4>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed px-2">
                         LLM modelleri ve makine öğrenimi 
                         algoritmaları ile veri analizi
                       </p>
                     </div>
-                    <div className="space-y-4">
-                      <div className="glass-medium-light rounded-2xl p-6 mx-auto inline-block hover:scale-105 transition-transform duration-300">
-                        <Target className="h-10 w-10 text-amber-600 mx-auto" />
+                    <div className="space-y-3 sm:space-y-4 sm:col-span-2 lg:col-span-1">
+                      <div className="glass-medium-light rounded-xl sm:rounded-2xl p-4 sm:p-6 mx-auto inline-block hover:scale-105 transition-transform duration-300">
+                        <Target className="h-8 w-8 sm:h-10 sm:w-10 text-amber-600 mx-auto" />
                       </div>
-                      <h4 className="font-semibold text-slate-800 text-lg">Tahmin Üretimi</h4>
-                      <p className="text-sm text-slate-600 leading-relaxed">
+                      <h4 className="font-semibold text-slate-800 text-base sm:text-lg">Tahmin Üretimi</h4>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed px-2">
                         Yüksek doğrulukla maç sonucu tahminleri 
                         ve güvenilirlik skorları
                       </p>
