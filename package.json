@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm install && vite",
-    "build": "npm install && rimraf node_modules/.vite-temp && tsc -b && vite build",
+    "build": "npm install && rimraf node_modules/.vite-temp && tsc -b && vite build && cp public/_redirects dist/_redirects",
     "deploy": "npm run build && npx wrangler deploy",
     "lint": "npm install && eslint .",
     "preview": "npm install && vite preview"
