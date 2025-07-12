@@ -77,31 +77,25 @@ const Layout = ({ children }: LayoutProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <img 
-                src="/images/scoreresultsai_logo.svg" 
-                alt="ScoreResultsAI" 
-                className="h-8 w-8"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/images/logo-fallback.png';
-                }}
-              />
-              <span className="text-xl font-bold text-slate-900 dark:text-slate-100">
-                <span className="text-blue-600">Score</span>
+              <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                <Trophy className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <span className="text-xl font-bold text-foreground">
+                <span className="text-muted-foreground">Score</span>
                 <span className="text-green-600">Results</span>
-                <span>AI</span>
+                <span className="text-foreground">AI</span>
               </span>
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-1">
+            <nav className="hidden lg:flex items-center space-x-2">
               {mainNavigation.map((item) => {
                 const Icon = item.icon
                 // Auth gerektiren sayfaları kontrol et
@@ -111,10 +105,10 @@ const Layout = ({ children }: LayoutProps) => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                       isActive(item.href)
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                        ? 'bg-muted text-foreground shadow-md transform scale-105'
+                        : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground hover:scale-105'
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -125,13 +119,13 @@ const Layout = ({ children }: LayoutProps) => {
             </nav>
 
             {/* Desktop Right Menu */}
-            <div className="hidden lg:flex items-center space-x-4">
+            <div className="hidden lg:flex items-center space-x-3">
               {/* Theme Toggle */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
-                className="h-9 w-9 p-0"
+                className="h-9 w-9 p-0 hover:bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-105"
               >
                 <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
@@ -140,7 +134,7 @@ const Layout = ({ children }: LayoutProps) => {
 
               {/* Notifications */}
               {user && (
-                <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
+                <Button variant="ghost" size="sm" className="h-9 w-9 p-0 hover:bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-105">
                   <Bell className="h-4 w-4" />
                   <span className="sr-only">Notifications</span>
                 </Button>
@@ -150,10 +144,10 @@ const Layout = ({ children }: LayoutProps) => {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-9 px-3">
+                    <Button variant="ghost" className="h-9 px-3 hover:bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-105">
                       <div className="flex items-center space-x-2">
-                        <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
-                          <span className="text-xs font-medium text-white">
+                        <div className="w-6 h-6 bg-muted rounded-full flex items-center justify-center border border-border">
+                          <span className="text-xs font-medium text-muted-foreground">
                             {user.email?.[0]?.toUpperCase() || 'U'}
                           </span>
                         </div>
@@ -164,7 +158,7 @@ const Layout = ({ children }: LayoutProps) => {
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuContent align="end" className="w-56 glass-card border-white/20">
                     <DropdownMenuLabel>
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium">Hesabım</p>
@@ -209,14 +203,14 @@ const Layout = ({ children }: LayoutProps) => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <div className="flex items-center space-x-2">
-                  <Button variant="ghost" size="sm" asChild>
+                <div className="flex items-center space-x-3">
+                  <Button variant="ghost" size="sm" asChild className="glass-button rounded-xl text-white/80 hover:text-white transition-all duration-300 hover:scale-105">
                     <Link to="/auth">
                       <LogIn className="mr-2 h-4 w-4" />
                       Giriş Yap
                     </Link>
                   </Button>
-                  <Button size="sm" asChild>
+                  <Button size="sm" asChild className="glass-medium rounded-xl text-white border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105 shadow-lg">
                     <Link to="/auth">
                       <User className="mr-2 h-4 w-4" />
                       Kayıt Ol
@@ -232,7 +226,7 @@ const Layout = ({ children }: LayoutProps) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="h-9 w-9 p-0"
+                className="h-9 w-9 p-0 glass-button rounded-xl text-white/80 hover:text-white transition-all duration-300 hover:scale-105"
               >
                 {isMenuOpen ? (
                   <X className="h-5 w-5" />
@@ -246,7 +240,7 @@ const Layout = ({ children }: LayoutProps) => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t bg-background/95 backdrop-blur">
+          <div className="lg:hidden border-t border-white/10 glass-strong">
             <div className="container mx-auto px-4 py-4 space-y-2">
               {/* Main Navigation */}
               {mainNavigation.map((item) => {
@@ -258,10 +252,10 @@ const Layout = ({ children }: LayoutProps) => {
                     key={item.name}
                     to={item.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                       isActive(item.href)
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                        ? 'glass-medium text-white shadow-lg'
+                        : 'text-muted-foreground hover:text-foreground hover:glass-button'
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -286,7 +280,7 @@ const Layout = ({ children }: LayoutProps) => {
                           key={item.name}
                           to={item.href}
                           onClick={() => setIsMenuOpen(false)}
-                          className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                          className="flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:glass-button transition-all duration-300"
                         >
                           <Icon className="h-4 w-4" />
                           <span>{item.name}</span>
@@ -364,7 +358,7 @@ const Layout = ({ children }: LayoutProps) => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-background/95">
+      <footer className="border-t border-border glass-navbar mt-16">
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-3">
@@ -374,7 +368,7 @@ const Layout = ({ children }: LayoutProps) => {
                   alt="ScoreResultsAI" 
                   className="h-6 w-6"
                 />
-                <span className="font-semibold">ScoreResultsAI</span>
+                <span className="font-semibold text-foreground">ScoreResultsAI</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 Yapay zeka destekli futbol analiz platformu
@@ -382,12 +376,12 @@ const Layout = ({ children }: LayoutProps) => {
             </div>
             
             <div className="space-y-3">
-              <h4 className="font-medium">Platform</h4>
+              <h4 className="font-medium text-foreground">Platform</h4>
               <div className="space-y-2 text-sm">
-                <Link to="/dashboard" className="block text-muted-foreground hover:text-foreground">
+                <Link to="/dashboard" className="block text-muted-foreground hover:text-foreground transition-colors">
                   Dashboard
                 </Link>
-                <Link to="/ai-analytics" className="block text-muted-foreground hover:text-foreground">
+                <Link to="/ai-analytics" className="block text-muted-foreground hover:text-foreground transition-colors">
                   AI Analitik
                 </Link>
 
@@ -395,31 +389,31 @@ const Layout = ({ children }: LayoutProps) => {
             </div>
             
             <div className="space-y-3">
-              <h4 className="font-medium">Destek</h4>
+              <h4 className="font-medium text-foreground">Destek</h4>
               <div className="space-y-2 text-sm">
-                <Link to="/about" className="block text-muted-foreground hover:text-foreground">
+                <Link to="/about" className="block text-muted-foreground hover:text-foreground transition-colors">
                   Hakkında
                 </Link>
-                <a href="mailto:info@scoreresultsai.com" className="block text-muted-foreground hover:text-foreground">
+                <a href="mailto:info@scoreresultsai.com" className="block text-muted-foreground hover:text-foreground transition-colors">
                   İletişim
                 </a>
               </div>
             </div>
             
             <div className="space-y-3">
-              <h4 className="font-medium">Yasal</h4>
+              <h4 className="font-medium text-foreground">Yasal</h4>
               <div className="space-y-2 text-sm">
-                <Link to="/privacy-policy" className="block text-muted-foreground hover:text-foreground">
+                <Link to="/privacy-policy" className="block text-muted-foreground hover:text-foreground transition-colors">
                   Gizlilik Politikası
                 </Link>
-                <Link to="/terms-of-use" className="block text-muted-foreground hover:text-foreground">
+                <Link to="/terms-of-use" className="block text-muted-foreground hover:text-foreground transition-colors">
                   Kullanım Şartları
                 </Link>
               </div>
             </div>
           </div>
           
-          <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
+          <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
             <p>&copy; 2024 ScoreResultsAI. Tüm hakları saklıdır.</p>
           </div>
         </div>

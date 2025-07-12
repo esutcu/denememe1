@@ -13,6 +13,7 @@ import Auth from './pages/Auth'
 import AuthCallback from './pages/AuthCallback'
 import AdminPanel from './pages/AdminPanel'
 import AdminLLMPage from './pages/AdminLLM'
+import ApiTest from './pages/ApiTest'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfUse from './pages/TermsOfUse'
 import NotFound from './pages/NotFound'
@@ -35,6 +36,7 @@ function App() {
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/admin" element={<AdminPanel />} />
               <Route path="/admin/llm" element={<AdminLLMPage />} />
+              <Route path="/api-test" element={<ApiTest />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-use" element={<TermsOfUse />} />
               <Route path="*" element={<NotFound />} />

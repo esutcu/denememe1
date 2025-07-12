@@ -5,28 +5,28 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:focus-visible:ring-zinc-300",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-zinc-900 text-zinc-50 shadow hover:bg-zinc-900/90 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90",
+          "bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg hover:bg-white/20 hover:border-white/30 hover:scale-105",
         destructive:
-          "bg-red-500 text-zinc-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-zinc-50 dark:hover:bg-red-900/90",
+          "bg-red-500/20 backdrop-blur-md border border-red-400/30 text-red-100 shadow-lg hover:bg-red-500/30 hover:border-red-400/50 hover:scale-105",
         outline:
-          "border border-zinc-200 bg-white shadow-sm hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
+          "border border-white/20 bg-white/5 backdrop-blur-md shadow-lg text-white/90 hover:bg-white/10 hover:border-white/30 hover:text-white hover:scale-105",
         "outline-light":
-          "border border-white bg-transparent text-white hover:bg-white hover:text-gray-800",
+          "border border-white/30 bg-white/5 backdrop-blur-md text-white hover:bg-white/15 hover:border-white/50 hover:scale-105",
         secondary:
-          "bg-zinc-100 text-zinc-900 shadow-sm hover:bg-zinc-100/80 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-800/80",
-        ghost: "hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
-        link: "text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50",
+          "bg-white/15 backdrop-blur-md border border-white/25 text-white shadow-lg hover:bg-white/25 hover:border-white/40 hover:scale-105",
+        ghost: "text-white/80 hover:bg-white/10 hover:text-white backdrop-blur-sm hover:scale-105",
+        link: "text-white/90 underline-offset-4 hover:underline hover:text-white",
       },
       size: {
         default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        xl: "text-lg px-8 py-3",
+        sm: "h-8 rounded-xl px-3 text-xs",
+        lg: "h-10 rounded-xl px-8",
+        xl: "text-lg px-8 py-3 rounded-xl",
         icon: "h-9 w-9",
       },
     },

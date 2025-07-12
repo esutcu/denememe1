@@ -163,6 +163,42 @@ div.progress-orange,
   background-color: rgba(31, 41, 55, 0.8);
 }
 
+.dark .performance-metrics {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(71, 85, 105, 0.3);
+}
+
+.dark .glass-card-light {
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(71, 85, 105, 0.3);
+}
+
+.dark .glass-medium-light {
+  background: rgba(15, 23, 42, 0.5);
+  border-color: rgba(71, 85, 105, 0.2);
+}
+
+.dark .text-slate-800 {
+  color: rgb(226, 232, 240) !important;
+}
+
+.dark .text-slate-700 {
+  color: rgb(203, 213, 225) !important;
+}
+
+.dark .text-slate-600 {
+  color: rgb(148, 163, 184) !important;
+}
+
+/* Dark mode progress bar backgrounds */
+.dark .bg-gray-200 {
+  background-color: rgb(30, 41, 59) !important;
+}
+
+.dark .bg-gray-700 {
+  background-color: rgb(51, 65, 85) !important;
+}
+
 /* Progress bar width sınıfları */
 .progress-width-78 { width: 78% !important; }
 .progress-width-85 { width: 85% !important; }

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
-import { Loader2, Crown } from 'lucide-react';
+import { Loader2, Crown, Check, Star, Zap, Shield, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { toast } from 'sonner';
@@ -26,38 +26,45 @@ const Subscription = () => {
   const plans: Plan[] = [
     {
       id: 'free',
-      name: 'Ücretsiz',
+      name: 'Başlangıç',
       price: 0,
       interval: 'aylık',
       features: [
         'Günlük 5 tahmin hakkı',
-        'Temel istatistikler',
-        '3 günlük tahmin geçmişi'
+        'Temel AI analizleri',
+        'Premier League + Süper Lig',
+        '7 günlük tahmin geçmişi',
+        'Mobil uygulama desteği'
       ]
     },
     {
-      id: 'pro',
-      name: 'Pro',
-      price: 49.99,
+      id: 'basic',
+      name: 'Temel',
+      price: 29,
       interval: 'aylık',
       features: [
-        'Sınırsız tahmin hakkı',
-        'Detaylı analizler',
+        'Günlük 50 tahmin hakkı',
+        'Tüm ligler (20+ lig)',
+        'Gelişmiş AI analizleri',
         '30 günlük tahmin geçmişi',
-        'Özel bildirimler'
+        'Email bildirimleri',
+        'Performans raporları'
       ],
       recommended: true
     },
     {
-      id: 'premium',
-      name: 'Premium',
-      price: 99.99,
+      id: 'pro',
+      name: 'Profesyonel',
+      price: 79,
       interval: 'aylık',
       features: [
-        'Tüm Pro özellikleri',
-        'Özel destek',
-        'Özel raporlar',
-        'VIP etkinlikler'
+        'Günlük 200 tahmin hakkı',
+        'Tüm premium özellikler',
+        'API erişimi',
+        'Sınırsız geçmiş',
+        'Özel destek kanali',
+        'Canlı maç bildirimleri',
+        'Özel raporlar ve analizler'
       ]
     }
   ];
@@ -91,66 +98,147 @@ const Subscription = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
+      <div className="min-h-screen flex justify-center items-center">
+        <div className="text-center glass-medium rounded-2xl p-8">
+          <Loader2 className="h-12 w-12 animate-spin text-blue-400 mx-auto mb-4" />
+          <p className="text-muted-foreground">Abonelik işlemi gerçekleştiriliyor...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Abonelik Planları</h1>
-          <p className="text-xl text-gray-600">İhtiyaçlarınıza uygun planı seçin ve tahminlerinizin keyfini çıkarın</p>
+    <div className="min-h-screen">
+      <div className="container mx-auto px-4">
+        {/* Enhanced Header */}
+        <div className="py-16 text-center">
+          <div className="inline-flex items-center gap-3 glass-medium rounded-2xl p-4 mb-6">
+            <div className="glass-strong rounded-xl p-3">
+              <Crown className="h-8 w-8 text-yellow-400" />
+            </div>
+            <div className="text-left">
+              <h1 className="text-3xl lg:text-4xl font-bold text-foreground">
+                Abonelik Planları
+              </h1>
+              <p className="text-muted-foreground text-sm">En uygun planı seçin</p>
+            </div>
+          </div>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            İhtiyaçlarınıza uygun planı seçin ve AI destekli futbol tahminlerinin keyfini çıkarın
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {plans.map((plan) => (
-            <Card 
-              key={plan.id}
-              className={`relative ${plan.recommended ? 'border-2 border-blue-500 transform scale-105' : 'border-gray-200'}`}
-            >
-              {plan.recommended && (
-                <div className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-1 rounded-bl-lg text-sm font-medium">
-                  Tavsiye Edilen
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+          {plans.map((plan, index) => {
+            const isRecommended = plan.recommended;
+            const icons = [Sparkles, Star, Zap];
+            const Icon = icons[index] || Star;
+            
+            return (
+              <Card 
+                key={plan.id}
+                className={`relative glass-card border-white/20 hover:glass-card-hover transition-all duration-300 group ${
+                  isRecommended ? 'lg:scale-110 lg:border-blue-400/50' : ''
+                }`}
+              >
+                {isRecommended && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <div className="glass-medium rounded-full px-4 py-1 border border-blue-400/50">
+                      <span className="text-blue-400 text-sm font-medium flex items-center gap-1">
+                        <Star className="h-3 w-3" />
+                        En Popüler
+                      </span>
+                    </div>
+                  </div>
+                )}
+                
+                <CardHeader className="text-center pt-8">
+                  <div className="glass-medium rounded-2xl p-4 w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <Icon className="h-8 w-8 text-blue-400" />
+                  </div>
+                  <CardTitle className="text-2xl font-bold text-foreground mb-2">
+                    {plan.name}
+                  </CardTitle>
+                  <CardDescription className="text-center">
+                    <div className="flex items-baseline justify-center gap-1">
+                      <span className="text-4xl font-bold text-foreground">
+                        {plan.price === 0 ? 'Ücretsiz' : `${plan.price} TL`}
+                      </span>
+                      {plan.price > 0 && (
+                        <span className="text-foreground/60">/{plan.interval}</span>
+                      )}
+                    </div>
+                  </CardDescription>
+                </CardHeader>
+                
+                <CardContent className="px-6 pb-8">
+                  <ul className="space-y-4 mb-8">
+                    {plan.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-3 text-foreground/90">
+                        <div className="glass-medium rounded-full p-1 mt-0.5">
+                          <Check className="h-3 w-3 text-green-400" />
+                        </div>
+                        <span className="text-sm leading-relaxed">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Button 
+                    onClick={() => handleSubscribe(plan.id)}
+                    className={`w-full transition-all duration-300 ${
+                      isRecommended 
+                        ? 'glass-medium border-blue-400/50 text-foreground hover:border-blue-400 hover:scale-105' 
+                        : 'glass-button border-white/30 text-foreground/90 hover:text-foreground hover:scale-105'
+                    }`}
+                    disabled={loading}
+                    size="lg"
+                  >
+                    {loading ? (
+                      <Loader2 className="animate-spin h-4 w-4" />
+                    ) : plan.price === 0 ? (
+                      'Ücretsiz Başla'
+                    ) : (
+                      'Hemen Başla'
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Enhanced Footer Section */}
+        <div className="text-center space-y-8">
+          <div className="glass-card border-white/20 rounded-2xl p-8">
+            <div className="grid md:grid-cols-3 gap-6 text-center">
+              <div className="space-y-2">
+                <div className="glass-medium rounded-xl p-3 w-12 h-12 mx-auto">
+                  <Shield className="h-6 w-6 text-green-400" />
                 </div>
-              )}
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold text-gray-900">
-                  {plan.name}
-                </CardTitle>
-                <CardDescription className="mt-4">
-                  <span className="text-4xl font-bold">₺{plan.price}</span>
-                  <span className="text-gray-500">/{plan.interval}</span>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center text-gray-600">
-                      <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <Button 
-                  onClick={() => handleSubscribe(plan.id)}
-                  className="w-full"
-                  variant={plan.recommended ? 'default' : 'outline'}
-                  disabled={loading}
-                >
-                  {loading ? <Loader2 className="animate-spin" /> : 'Başla'}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className="mt-16 text-center text-gray-600">
-          <p>İptal etmek isterseniz 7/24 destek ekibimizle iletişime geçebilirsiniz.</p>
+                <h3 className="font-semibold text-foreground">Güvenli Ödeme</h3>
+                <p className="text-sm text-muted-foreground">256-bit SSL şifreleme ile korumalı</p>
+              </div>
+              <div className="space-y-2">
+                <div className="glass-medium rounded-xl p-3 w-12 h-12 mx-auto">
+                  <Loader2 className="h-6 w-6 text-blue-400" />
+                </div>
+                <h3 className="font-semibold text-foreground">Anlık Aktivasyon</h3>
+                <p className="text-sm text-muted-foreground">Ödeme sonrası hemen kullanıma başlayın</p>
+              </div>
+              <div className="space-y-2">
+                <div className="glass-medium rounded-xl p-3 w-12 h-12 mx-auto">
+                  <Crown className="h-6 w-6 text-yellow-400" />
+                </div>
+                <h3 className="font-semibold text-foreground">7/24 Destek</h3>
+                <p className="text-sm text-muted-foreground">Her zaman yanınızdayız</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center text-muted-foreground">
+            <p className="mb-2">İptal etmek isterseniz istediğiniz zaman 7/24 destek ekibimizle iletişime geçebilirsiniz.</p>
+            <p className="text-sm">Tüm planlar 30 gün para iade garantisi ile korunmaktadır.</p>
+          </div>
         </div>
       </div>
     </div>

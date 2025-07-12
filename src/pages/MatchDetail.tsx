@@ -13,10 +13,11 @@ import {
   Target, 
   Activity,
   BarChart3,
-  Brain,
+  Layers,
   AlertTriangle,
   CheckCircle,
-  Info
+  Info,
+  Loader2
 } from 'lucide-react'
 import { getMatchById, type Match } from '../constants/matches'
 import { getLeagueById } from '../constants/leagues'
@@ -40,8 +41,10 @@ const MatchDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Maç detayları yüklüyor...</p>
+          <div className="glass-medium rounded-2xl p-8">
+            <Loader2 className="h-12 w-12 animate-spin text-blue-400 mx-auto mb-4" />
+            <p className="text-muted-foreground">Maç detayları yükleniyor...</p>
+          </div>
         </div>
       </div>
     )
@@ -51,12 +54,17 @@ const MatchDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Maç Bulunamadı</h1>
-          <p className="text-muted-foreground mb-6">Aradığınız maç mevcut değil veya kaldırılmış olabilir.</p>
-          <Button onClick={() => navigate('/dashboard')}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Dashboard'a Dön
-          </Button>
+          <div className="glass-card border-white/20 rounded-2xl p-8 max-w-md">
+            <h1 className="text-2xl font-bold text-foreground mb-4">Maç Bulunamadı</h1>
+            <p className="text-muted-foreground mb-6">Aradığınız maç mevcut değil veya kaldırılmış olabilir.</p>
+            <Button 
+              onClick={() => navigate('/dashboard')}
+              className="glass-medium border-border text-foreground hover:border-muted-foreground"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Dashboard'a Dön
+            </Button>
+          </div>
         </div>
       </div>
     )
@@ -85,7 +93,7 @@ const MatchDetail = () => {
       case 'low': return 'text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-300'
       case 'medium': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900 dark:text-yellow-300'
       case 'high': return 'text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-300'
-      default: return 'text-gray-600 bg-gray-100'
+      default: return 'text-muted-foreground bg-muted'
     }
   }
 
@@ -132,26 +140,29 @@ const MatchDetail = () => {
             variant="ghost" 
             size="sm"
             onClick={() => navigate('/dashboard')}
+            className="glass-button border-border text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Geri
           </Button>
           <div className="flex items-center gap-2">
-            <Badge variant="outline">{match.league}</Badge>
-            <Badge className={getStatusColor(match.status)}>
+            <Badge className="glass-button border-border text-muted-foreground">{match.league}</Badge>
+            <Badge className={`${getStatusColor(match.status)} text-foreground`}>
               {getStatusText(match.status)}
             </Badge>
           </div>
         </div>
 
         {/* Match Header */}
-        <Card>
+        <Card className="glass-card border-white/20">
           <CardContent className="p-8">
             <div className="grid md:grid-cols-3 gap-8 items-center">
               {/* Home Team */}
               <div className="text-center">
-                <div className="text-6xl mb-4">{match.homeLogo}</div>
-                <h2 className="text-2xl font-bold mb-2">{match.homeTeam}</h2>
+                <div className="glass-medium rounded-3xl p-6 w-24 h-24 flex items-center justify-center mx-auto mb-4">
+                  <div className="text-4xl">{match.homeLogo}</div>
+                </div>
+                <h2 className="text-2xl font-bold text-foreground mb-2">{match.homeTeam}</h2>
                 <p className="text-muted-foreground">Ev Sahibi</p>
               </div>
 
@@ -174,21 +185,23 @@ const MatchDetail = () => {
                   </div>
                 </div>
                 {league && (
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center glass-medium rounded-xl p-3">
                     <img 
                       src={league.logo} 
                       alt={league.name}
-                      className="h-8 w-8 mr-2"
+                      className="h-6 w-6 mr-2"
                     />
-                    <span className="font-medium">{league.name}</span>
+                    <span className="font-medium text-foreground text-sm">{league.name}</span>
                   </div>
                 )}
               </div>
 
               {/* Away Team */}
               <div className="text-center">
-                <div className="text-6xl mb-4">{match.awayLogo}</div>
-                <h2 className="text-2xl font-bold mb-2">{match.awayTeam}</h2>
+                <div className="glass-medium rounded-3xl p-6 w-24 h-24 flex items-center justify-center mx-auto mb-4">
+                  <div className="text-4xl">{match.awayLogo}</div>
+                </div>
+                <h2 className="text-2xl font-bold text-foreground mb-2">{match.awayTeam}</h2>
                 <p className="text-muted-foreground">Deplasman</p>
               </div>
             </div>
@@ -196,51 +209,55 @@ const MatchDetail = () => {
         </Card>
 
         {/* AI Prediction Overview */}
-        <Card>
+        <Card className="glass-card border-white/20">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Brain className="h-5 w-5 text-blue-500" />
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <div className="glass-medium rounded-lg p-2">
+                <Layers className="h-5 w-5 text-blue-400" />
+              </div>
               AI Tahmin Özeti
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-4 gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-2">
+              <div className="text-center glass-medium rounded-xl p-4">
+                <div className="text-2xl font-bold text-blue-400 mb-2">
                   %{match.prediction.homeWin}
                 </div>
                 <p className="text-sm text-muted-foreground">Ev Sahibi Galibiyeti</p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-muted-foreground mb-2">
+              <div className="text-center glass-medium rounded-xl p-4">
+                <div className="text-2xl font-bold text-foreground mb-2">
                   %{match.prediction.draw}
                 </div>
                 <p className="text-sm text-muted-foreground">Beraberlik</p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-2">
+              <div className="text-center glass-medium rounded-xl p-4">
+                <div className="text-2xl font-bold text-blue-400 mb-2">
                   %{match.prediction.awayWin}
                 </div>
                 <p className="text-sm text-muted-foreground">Deplasman Galibiyeti</p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600 mb-2">
+              <div className="text-center glass-medium rounded-xl p-4">
+                <div className="text-2xl font-bold text-green-400 mb-2">
                   %{match.prediction.confidence}
                 </div>
                 <p className="text-sm text-muted-foreground">AI Güven Oranı</p>
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-muted/30 rounded-lg">
+            <div className="mt-6 glass-medium rounded-xl p-4">
               <div className="flex items-start gap-3">
-                {(() => {
-                  const RiskIcon = getRiskIcon(match.aiAnalysis.riskLevel)
-                  return <RiskIcon className="h-5 w-5 mt-0.5 text-current" />
-                })()}
-                <div>
+                <div className="glass-strong rounded-lg p-2 mt-1">
+                  {(() => {
+                    const RiskIcon = getRiskIcon(match.aiAnalysis.riskLevel)
+                    return <RiskIcon className="h-4 w-4 text-blue-400" />
+                  })()}
+                </div>
+                <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="font-medium">AI Analiz Özeti</span>
-                    <Badge className={getRiskColor(match.aiAnalysis.riskLevel)}>
+                    <span className="font-medium text-foreground">AI Analiz Özeti</span>
+                    <Badge className={`${getRiskColor(match.aiAnalysis.riskLevel)} text-xs`}>
                       {match.aiAnalysis.riskLevel === 'low' ? 'Düşük Risk' : 
                        match.aiAnalysis.riskLevel === 'medium' ? 'Orta Risk' : 'Yüksek Risk'}
                     </Badge>
@@ -254,39 +271,59 @@ const MatchDetail = () => {
 
         {/* Detailed Analysis Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="prediction">Tahmin Detayı</TabsTrigger>
-            <TabsTrigger value="form">Form Analizi</TabsTrigger>
-            <TabsTrigger value="stats">Takım İstatistikleri</TabsTrigger>
-            <TabsTrigger value="history">Karşılaşma Geçmişi</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 glass-medium border border-white/20">
+            <TabsTrigger 
+              value="prediction"
+              className="text-muted-foreground data-[state=active]:glass-button data-[state=active]:text-foreground data-[state=active]:border-border"
+            >
+              Tahmin Detayı
+            </TabsTrigger>
+            <TabsTrigger 
+              value="form"
+              className="text-muted-foreground data-[state=active]:glass-button data-[state=active]:text-foreground data-[state=active]:border-border"
+            >
+              Form Analizi
+            </TabsTrigger>
+            <TabsTrigger 
+              value="stats"
+              className="text-muted-foreground data-[state=active]:glass-button data-[state=active]:text-foreground data-[state=active]:border-border"
+            >
+              Takım İstatistikleri
+            </TabsTrigger>
+            <TabsTrigger 
+              value="history"
+              className="text-muted-foreground data-[state=active]:glass-button data-[state=active]:text-foreground data-[state=active]:border-border"
+            >
+              Karşılaşma Geçmişi
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="prediction" className="space-y-6">
-            <Card>
+            <Card className="glass-card border-white/20">
               <CardHeader>
-                <CardTitle>Detaylı Tahmin Analizi</CardTitle>
+                <CardTitle className="text-foreground">Detaylı Tahmin Analizi</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Prediction Visualization */}
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span>{match.homeTeam} Galibiyeti</span>
-                      <span className="font-medium">%{match.prediction.homeWin}</span>
+                      <span className="text-foreground">{match.homeTeam} Galibiyeti</span>
+                      <span className="font-medium text-blue-400">%{match.prediction.homeWin}</span>
                     </div>
                     <Progress value={match.prediction.homeWin} className="h-3" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span>Beraberlik</span>
-                      <span className="font-medium">%{match.prediction.draw}</span>
+                      <span className="text-foreground">Beraberlik</span>
+                      <span className="font-medium text-foreground">%{match.prediction.draw}</span>
                     </div>
                     <Progress value={match.prediction.draw} className="h-3" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span>{match.awayTeam} Galibiyeti</span>
-                      <span className="font-medium">%{match.prediction.awayWin}</span>
+                      <span className="text-foreground">{match.awayTeam} Galibiyeti</span>
+                      <span className="font-medium text-blue-400">%{match.prediction.awayWin}</span>
                     </div>
                     <Progress value={match.prediction.awayWin} className="h-3" />
                   </div>
@@ -294,12 +331,12 @@ const MatchDetail = () => {
 
                 {/* Key Factors */}
                 <div>
-                  <h4 className="font-semibold mb-3">Anahtar Faktörler</h4>
+                  <h4 className="font-semibold mb-3 text-foreground">Anahtar Faktörler</h4>
                   <div className="space-y-2">
                     {match.aiAnalysis.keyFactors.map((factor, index) => (
-                      <div key={index} className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                        <span className="text-sm">{factor}</span>
+                      <div key={index} className="flex items-center gap-3 glass-medium rounded-lg p-3">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full" />
+                        <span className="text-sm text-muted-foreground">{factor}</span>
                       </div>
                     ))}
                   </div>
@@ -310,16 +347,16 @@ const MatchDetail = () => {
 
           <TabsContent value="form" className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-              <Card>
+              <Card className="glass-card border-white/20">
                 <CardHeader>
-                  <CardTitle>{match.homeTeam} - Son 5 Maç</CardTitle>
+                  <CardTitle className="text-foreground">{match.homeTeam} - Son 5 Maç</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex gap-2 mb-4">
                     {recentForm.home.map((result, index) => (
                       <div 
                         key={index}
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium ${
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-foreground text-sm font-medium ${
                           result === 'W' ? 'bg-green-500' :
                           result === 'D' ? 'bg-yellow-500' : 'bg-red-500'
                         }`}
@@ -330,31 +367,31 @@ const MatchDetail = () => {
                   </div>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span>Galibiyet:</span>
-                      <span className="font-medium">3/5</span>
+                      <span className="text-muted-foreground">Galibiyet:</span>
+                      <span className="font-medium text-green-400">3/5</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Beraberlik:</span>
-                      <span className="font-medium">1/5</span>
+                      <span className="text-muted-foreground">Beraberlik:</span>
+                      <span className="font-medium text-yellow-400">1/5</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Mağlubiyet:</span>
-                      <span className="font-medium">1/5</span>
+                      <span className="text-muted-foreground">Mağlubiyet:</span>
+                      <span className="font-medium text-red-400">1/5</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="glass-card border-white/20">
                 <CardHeader>
-                  <CardTitle>{match.awayTeam} - Son 5 Maç</CardTitle>
+                  <CardTitle className="text-foreground">{match.awayTeam} - Son 5 Maç</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex gap-2 mb-4">
                     {recentForm.away.map((result, index) => (
                       <div 
                         key={index}
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium ${
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-foreground text-sm font-medium ${
                           result === 'W' ? 'bg-green-500' :
                           result === 'D' ? 'bg-yellow-500' : 'bg-red-500'
                         }`}
@@ -365,16 +402,16 @@ const MatchDetail = () => {
                   </div>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span>Galibiyet:</span>
-                      <span className="font-medium">3/5</span>
+                      <span className="text-muted-foreground">Galibiyet:</span>
+                      <span className="font-medium text-green-400">3/5</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Beraberlik:</span>
-                      <span className="font-medium">1/5</span>
+                      <span className="text-muted-foreground">Beraberlik:</span>
+                      <span className="font-medium text-yellow-400">1/5</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Mağlubiyet:</span>
-                      <span className="font-medium">1/5</span>
+                      <span className="text-muted-foreground">Mağlubiyet:</span>
+                      <span className="font-medium text-red-400">1/5</span>
                     </div>
                   </div>
                 </CardContent>
@@ -384,75 +421,75 @@ const MatchDetail = () => {
 
           <TabsContent value="stats" className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-              <Card>
+              <Card className="glass-card border-white/20">
                 <CardHeader>
-                  <CardTitle>{match.homeTeam} İstatistikleri</CardTitle>
+                  <CardTitle className="text-foreground">{match.homeTeam} İstatistikleri</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-muted/30 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">{teamStats.home.goalsFor}</div>
+                    <div className="text-center glass-medium rounded-xl p-4">
+                      <div className="text-2xl font-bold text-green-400">{teamStats.home.goalsFor}</div>
                       <div className="text-sm text-muted-foreground">Gol</div>
                     </div>
-                    <div className="text-center p-3 bg-muted/30 rounded-lg">
-                      <div className="text-2xl font-bold text-red-600">{teamStats.home.goalsAgainst}</div>
+                    <div className="text-center glass-medium rounded-xl p-4">
+                      <div className="text-2xl font-bold text-red-400">{teamStats.home.goalsAgainst}</div>
                       <div className="text-sm text-muted-foreground">Yenilen Gol</div>
                     </div>
                   </div>
                   
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span>Top Sahipliği:</span>
-                      <span className="font-medium">%{teamStats.home.possession}</span>
+                      <span className="text-muted-foreground">Top Sahipliği:</span>
+                      <span className="font-medium text-blue-400">%{teamStats.home.possession}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Şut:</span>
-                      <span className="font-medium">{teamStats.home.shots}</span>
+                      <span className="text-muted-foreground">Şut:</span>
+                      <span className="font-medium text-foreground">{teamStats.home.shots}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Korner:</span>
-                      <span className="font-medium">{teamStats.home.corners}</span>
+                      <span className="text-muted-foreground">Korner:</span>
+                      <span className="font-medium text-foreground">{teamStats.home.corners}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Faul:</span>
-                      <span className="font-medium">{teamStats.home.fouls}</span>
+                      <span className="text-muted-foreground">Faul:</span>
+                      <span className="font-medium text-foreground">{teamStats.home.fouls}</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="glass-card border-white/20">
                 <CardHeader>
-                  <CardTitle>{match.awayTeam} İstatistikleri</CardTitle>
+                  <CardTitle className="text-foreground">{match.awayTeam} İstatistikleri</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-muted/30 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">{teamStats.away.goalsFor}</div>
+                    <div className="text-center glass-medium rounded-xl p-4">
+                      <div className="text-2xl font-bold text-green-400">{teamStats.away.goalsFor}</div>
                       <div className="text-sm text-muted-foreground">Gol</div>
                     </div>
-                    <div className="text-center p-3 bg-muted/30 rounded-lg">
-                      <div className="text-2xl font-bold text-red-600">{teamStats.away.goalsAgainst}</div>
+                    <div className="text-center glass-medium rounded-xl p-4">
+                      <div className="text-2xl font-bold text-red-400">{teamStats.away.goalsAgainst}</div>
                       <div className="text-sm text-muted-foreground">Yenilen Gol</div>
                     </div>
                   </div>
                   
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span>Top Sahipliği:</span>
-                      <span className="font-medium">%{teamStats.away.possession}</span>
+                      <span className="text-muted-foreground">Top Sahipliği:</span>
+                      <span className="font-medium text-blue-400">%{teamStats.away.possession}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Şut:</span>
-                      <span className="font-medium">{teamStats.away.shots}</span>
+                      <span className="text-muted-foreground">Şut:</span>
+                      <span className="font-medium text-foreground">{teamStats.away.shots}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Korner:</span>
-                      <span className="font-medium">{teamStats.away.corners}</span>
+                      <span className="text-muted-foreground">Korner:</span>
+                      <span className="font-medium text-foreground">{teamStats.away.corners}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Faul:</span>
-                      <span className="font-medium">{teamStats.away.fouls}</span>
+                      <span className="text-muted-foreground">Faul:</span>
+                      <span className="font-medium text-foreground">{teamStats.away.fouls}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -461,22 +498,26 @@ const MatchDetail = () => {
           </TabsContent>
 
           <TabsContent value="history" className="space-y-6">
-            <Card>
+            <Card className="glass-card border-white/20">
               <CardHeader>
-                <CardTitle>Son Karşılaşmalar</CardTitle>
+                <CardTitle className="text-foreground">Son Karşılaşmalar</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {headToHead.map((match, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-4 glass-medium rounded-xl">
                       <div className="text-sm text-muted-foreground">
                         {new Date(match.date).toLocaleDateString('tr-TR')}
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="font-medium">
+                        <span className="font-medium text-foreground">
                           {match.homeScore} - {match.awayScore}
                         </span>
-                        <Badge variant={match.result === 'home' ? 'default' : match.result === 'away' ? 'secondary' : 'outline'}>
+                        <Badge className={`${
+                          match.result === 'home' ? 'bg-blue-500' : 
+                          match.result === 'away' ? 'bg-purple-500' : 
+                          'bg-yellow-500'
+                        } text-foreground text-xs`}>
                           {match.result === 'home' ? 'Ev Sahibi' : match.result === 'away' ? 'Deplasman' : 'Beraberlik'}
                         </Badge>
                       </div>

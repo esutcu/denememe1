@@ -30,10 +30,10 @@ export interface AIFeature {
 export const aiFeatures: AIFeature[] = [
   {
     id: '1',
-    title: 'Big Data Analysis',
+    title: 'Büyük Veri Analizi',
     description: 'Milyonlarca veri noktasını işleyerek kapsamlı futbol analizleri gerçekleştiriyoruz',
-    image: '/denememe/images/card_big_data.png',
-    color: 'from-gray-600 to-blue-600',
+    image: '/images/card_big_data.png',
+    color: 'bg-slate-100',
     icon: '🗄️',
     benefits: [
       'Milyonlarca veri noktası',
@@ -43,10 +43,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '2',
-    title: 'Data Analysis',
+    title: 'Veri Analizi',
     description: 'Kapsamlı futbol verilerini AI ile analiz ederek detaylı içgörüler sunuyoruz',
-    image: '/denememe/images/card_data_analysis_3d.png',
-    color: 'from-green-500 to-emerald-600',
+    image: '/images/card_data_analysis_3d.png',
+    color: 'bg-slate-100',
     icon: '📊',
     benefits: [
       'Gerçek zamanlı veri işleme',
@@ -56,10 +56,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '3',
-    title: 'Deep Learning',
+    title: 'Derin Öğrenme',
     description: 'Neural network modelleri ile karmaşık futbol verilerini işleyip öngörüler üretiyoruz',
-    image: '/denememe/images/card_deep_learning.png',
-    color: 'from-cyan-500 to-blue-600',
+    image: '/images/card_deep_learning.png',
+    color: 'bg-slate-100',
     icon: '🔬',
     benefits: [
       'Derin neural network modelleri',
@@ -69,10 +69,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '4',
-    title: 'Fan Engagement',
+    title: 'Taraftar Etkileşimi',
     description: 'Takım stratejilerini derinlemesine analiz ederek taktiksel öngörüler sağlıyoruz',
-    image: '/denememe/images/card_fan_engagement.png',
-    color: 'from-amber-500 to-orange-600',
+    image: '/images/card_fan_engagement.png',
+    color: 'bg-slate-100',
     icon: '♟️',
     benefits: [
       'Taktiksel analiz',
@@ -82,10 +82,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '5',
-    title: 'Financial Analysis',
+    title: 'Mali Analiz',
     description: 'Gelişmiş ML algoritmaları ile maç sonuçlarını yüksek doğrulukla tahmin ediyoruz',
-    image: '/denememe/images/card_financial.png',
-    color: 'from-blue-500 to-purple-600',
+    image: '/images/card_financial.png',
+    color: 'bg-slate-100',
     icon: '🧠',
     benefits: [
       '%68+ tahmin doğruluğu',
@@ -95,10 +95,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '6',
-    title: 'Formation Analysis',
+    title: 'Diziliş Analizi',
     description: 'Oyuncu ve takım performanslarını sürekli izleyerek gelişim önerilerinde bulunuyoruz',
-    image: '/denememe/images/card_formation.png',
-    color: 'from-red-500 to-pink-600',
+    image: '/images/card_formation.png',
+    color: 'bg-slate-100',
     icon: '📈',
     benefits: [
       'Gerçek zamanlı performans takibi',
@@ -108,10 +108,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '7',
-    title: 'Injury Prevention',
+    title: 'Sakatlık Önleme',
     description: 'Gelecekteki maç sonuçlarını ve oyuncu performanslarını önceden tahmin ediyoruz',
-    image: '/denememe/images/card_injury_prevention.png',
-    color: 'from-purple-500 to-indigo-600',
+    image: '/images/card_injury_prevention.png',
+    color: 'bg-slate-100',
     icon: '🔮',
     benefits: [
       'Gelecek maç tahminleri',
@@ -121,36 +121,36 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '8',
-    title: 'Live Analysis',
+    title: 'Canlı Analiz',
     description: 'Maçlar sırasında gerçek zamanlı analiz ve tahminler sunuyoruz',
-    image: '/denememe/images/card_live_analysis.png',
-    color: 'from-green-600 to-teal-600',
+    image: '/images/card_live_analysis.png',
+    color: 'bg-slate-100',
     icon: '⚡',
     benefits: [
       'Gerçek zamanlı maç analizi',
       'Anlık tahmin güncellemeleri',
-      'Live istatistik takibi'
+      'Canlı istatistik takibi'
     ]
   },
   {
     id: '9',
-    title: 'Match Prediction',
+    title: 'Maç Tahmini',
     description: 'Maçlar sırasında gerçek zamanlı analiz ve tahminler sunuyoruz',
-    image: '/denememe/images/card_match_prediction.png',
-    color: 'from-green-600 to-teal-600',
+    image: '/images/card_match_prediction.png',
+    color: 'bg-slate-100',
     icon: '⚡',
     benefits: [
       'Gerçek zamanlı maç analizi',
       'Anlık tahmin güncellemeleri',
-      'Live istatistik takibi'
+      'Canlı istatistik takibi'
     ]
   },
   {
     id: '10',
-    title: 'ML Advanced',
+    title: 'Gelişmiş Makine Öğrenmesi',
     description: 'Gelişmiş ML algoritmaları ile maç sonuçlarını yüksek doğrulukla tahmin ediyoruz',
-    image: '/denememe/images/card_ml_advanced.png',
-    color: 'from-blue-500 to-purple-600',
+    image: '/images/card_ml_advanced.png',
+    color: 'bg-slate-100',
     icon: '🧠',
     benefits: [
       '%78+ tahmin doğruluğu',
@@ -160,10 +160,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '11',
-    title: 'Performance Tracking',
+    title: 'Performans Takibi',
     description: 'Oyuncu ve takım performanslarını sürekli izleyerek gelişim önerilerinde bulunuyoruz',
-    image: '/denememe/images/card_performance_tracking.png',
-    color: 'from-red-500 to-pink-600',
+    image: '/images/card_performance_tracking.png',
+    color: 'bg-slate-100',
     icon: '📈',
     benefits: [
       'Gerçek zamanlı performans takibi',
@@ -173,10 +173,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '12',
-    title: 'Predictive Analytics',
+    title: 'Öngörülü Analitik',
     description: 'Gelecekteki maç sonuçlarını ve oyuncu performanslarını önceden tahmin ediyoruz',
-    image: '/denememe/images/card_predictive.png',
-    color: 'from-purple-500 to-indigo-600',
+    image: '/images/card_predictive.png',
+    color: 'bg-slate-100',
     icon: '🔮',
     benefits: [
       'Gelecek maç tahminleri',
@@ -186,10 +186,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '13',
-    title: 'Strategy Analysis',
+    title: 'Strateji Analizi',
     description: 'Takım stratejilerini derinlemesine analiz ederek taktiksel öngörüler sağlıyoruz',
-    image: '/denememe/images/card_strategy_chess.png',
-    color: 'from-amber-500 to-orange-600',
+    image: '/images/card_strategy_chess.png',
+    color: 'bg-slate-100',
     icon: '♟️',
     benefits: [
       'Taktiksel analiz',
@@ -199,10 +199,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '14',
-    title: 'Training Optimization',
+    title: 'Antrenman Optimizasyonu',
     description: 'Neural network modelleri ile karmaşık futbol verilerini işleyip öngörüler üretiyoruz',
-    image: '/denememe/images/card_training_optimization.png',
-    color: 'from-cyan-500 to-blue-600',
+    image: '/images/card_training_optimization.png',
+    color: 'bg-slate-100',
     icon: '🔬',
     benefits: [
       'Derin neural network modelleri',
@@ -212,10 +212,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '15',
-    title: 'Transfer Market',
+    title: 'Transfer Piyasası',
     description: 'Oyuncu ve takım performanslarını sürekli izleyerek gelişim önerilerinde bulunuyoruz',
-    image: '/denememe/images/card_transfer_market.png',
-    color: 'from-red-500 to-pink-600',
+    image: '/images/card_transfer_market.png',
+    color: 'bg-slate-100',
     icon: '📈',
     benefits: [
       'Gerçek zamanlı performans takibi',
@@ -225,10 +225,10 @@ export const aiFeatures: AIFeature[] = [
   },
   {
     id: '16',
-    title: 'Video Analytics',
+    title: 'Video Analitikleri',
     description: 'Gelecekteki maç sonuçlarını ve oyuncu performanslarını önceden tahmin ediyoruz',
-    image: '/denememe/images/card_video_analytics.png',
-    color: 'from-purple-500 to-indigo-600',
+    image: '/images/card_video_analytics.png',
+    color: 'bg-slate-100',
     icon: '🔮',
     benefits: [
       'Gelecek maç tahminleri',
