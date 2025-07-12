@@ -482,7 +482,7 @@ const handlePredictionSubmit = async (e: React.FormEvent) => {
                 </TabsList>
               </div>
               
-              <TabsContent value={selectedTab} className="p-6 pt-4">
+              <TabsContent value={selectedTab} className="p-4 sm:p-6 pt-3 sm:pt-4">
                 {filteredMatches.length === 0 ? (
                   <div className="text-center py-12">
                     <div className="glass-medium rounded-full p-6 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
@@ -509,10 +509,10 @@ const handlePredictionSubmit = async (e: React.FormEvent) => {
                       >
                         <CardContent className="p-0">
                           {/* Match Header */}
-                          <div className="p-4 border-b border-white/10">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <Badge variant="outline" className="glass-button border-border text-muted-foreground">
+                          <div className="p-3 sm:p-4 border-b border-white/10">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                                <Badge variant="outline" className="glass-button border-border text-muted-foreground text-xs">
                                   {match.league}
                                 </Badge>
                                 <Badge className={`${getStatusColor(match.status)} text-foreground text-xs`}>
@@ -525,43 +525,43 @@ const handlePredictionSubmit = async (e: React.FormEvent) => {
                                   </div>
                                 )}
                               </div>
-                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <Calendar className="h-4 w-4" />
+                              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-0">
+                                <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
                                 {match.date}
-                                <Clock className="h-4 w-4 ml-2" />
+                                <Clock className="h-3 w-3 sm:h-4 sm:w-4 ml-2" />
                                 {match.time}
                               </div>
                             </div>
                           </div>
 
                           {/* Teams and Prediction */}
-                          <div className="p-6">
-                            <div className="flex items-center justify-between mb-6">
+                          <div className="p-4 sm:p-6">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
                               {/* Teams */}
-                              <div className="flex items-center gap-8 flex-1">
+                              <div className="flex items-center gap-4 sm:gap-8 flex-1">
                                 <div className="text-center flex-1">
-                                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">{match.homeLogo}</div>
-                                  <div className="font-medium text-foreground text-sm">{match.homeTeam}</div>
-                                  <div className="text-xs text-muted-foreground mt-1">Ev Sahibi</div>
+                                  <div className="text-2xl sm:text-3xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">{match.homeLogo}</div>
+                                  <div className="font-medium text-foreground text-xs sm:text-sm leading-tight">{match.homeTeam}</div>
+                                  <div className="text-xs text-muted-foreground mt-1 hidden sm:block">Ev Sahibi</div>
                                 </div>
                                 
-                                <div className="text-center px-4">
-                                  <div className="text-lg font-bold text-muted-foreground mb-1">VS</div>
+                                <div className="text-center px-2 sm:px-4">
+                                  <div className="text-base sm:text-lg font-bold text-muted-foreground mb-1">VS</div>
                                   <div className="text-xs text-muted-foreground">{match.status === 'live' ? 'CANLI' : 'Maç'}</div>
                                 </div>
                                 
                                 <div className="text-center flex-1">
-                                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">{match.awayLogo}</div>
-                                  <div className="font-medium text-foreground text-sm">{match.awayTeam}</div>
-                                  <div className="text-xs text-muted-foreground mt-1">Deplasman</div>
+                                  <div className="text-2xl sm:text-3xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">{match.awayLogo}</div>
+                                  <div className="font-medium text-foreground text-xs sm:text-sm leading-tight">{match.awayTeam}</div>
+                                  <div className="text-xs text-muted-foreground mt-1 hidden sm:block">Deplasman</div>
                                 </div>
                               </div>
                               
                               {/* AI Confidence */}
-                              <div className="text-right ml-6">
-                                <div className="glass-medium rounded-xl p-4">
+                              <div className="text-center sm:text-right sm:ml-6 w-full sm:w-auto">
+                                <div className="glass-medium rounded-lg sm:rounded-xl p-3 sm:p-4">
                                   <div className="text-xs text-muted-foreground mb-1">AI Güven</div>
-                                  <div className="text-2xl font-bold text-blue-400">
+                                  <div className="text-xl sm:text-2xl font-bold text-blue-400">
                                     %{match.prediction.confidence}
                                   </div>
                                   <div className="text-xs text-muted-foreground mt-1">Yüksek</div>
@@ -570,32 +570,34 @@ const handlePredictionSubmit = async (e: React.FormEvent) => {
                             </div>
                             
                             {/* Prediction Odds */}
-                            <div className="grid grid-cols-3 gap-3 mb-4">
-                              <div className="glass-medium rounded-lg p-3 text-center">
+                            <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-3 sm:mb-4">
+                              <div className="glass-medium rounded-lg p-2 sm:p-3 text-center">
                                 <div className="text-xs text-muted-foreground mb-1">1</div>
-                                <div className="text-lg font-bold text-foreground">%{match.prediction.homeWin}</div>
+                                <div className="text-sm sm:text-lg font-bold text-foreground">%{match.prediction.homeWin}</div>
                               </div>
-                              <div className="glass-medium rounded-lg p-3 text-center">
+                              <div className="glass-medium rounded-lg p-2 sm:p-3 text-center">
                                 <div className="text-xs text-muted-foreground mb-1">X</div>
-                                <div className="text-lg font-bold text-foreground">%{match.prediction.draw}</div>
+                                <div className="text-sm sm:text-lg font-bold text-foreground">%{match.prediction.draw}</div>
                               </div>
-                              <div className="glass-medium rounded-lg p-3 text-center">
+                              <div className="glass-medium rounded-lg p-2 sm:p-3 text-center">
                                 <div className="text-xs text-muted-foreground mb-1">2</div>
-                                <div className="text-lg font-bold text-foreground">%{match.prediction.awayWin}</div>
+                                <div className="text-sm sm:text-lg font-bold text-foreground">%{match.prediction.awayWin}</div>
                               </div>
                             </div>
                             
                             {/* Match Footer */}
-                            <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                              <div className="flex items-center gap-3">
-                                <span className="text-sm text-muted-foreground">Risk Seviyesi:</span>
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 pt-3 sm:pt-4 border-t border-white/10">
+                              <div className="flex items-center gap-2 sm:gap-3">
+                                <span className="text-xs sm:text-sm text-muted-foreground">Risk:</span>
                                 <Badge className={`${getRiskColor(match.aiAnalysis.riskLevel)} text-xs`}>
                                   {match.aiAnalysis.riskLevel === 'low' ? 'Düşük' : 
                                    match.aiAnalysis.riskLevel === 'medium' ? 'Orta' : 'Yüksek'}
                                 </Badge>
                               </div>
-                              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground group-hover:translate-x-1 transition-transform">
-                                Detaylı Analiz <ArrowRight className="ml-2 h-4 w-4" />
+                              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground group-hover:translate-x-1 transition-transform text-xs sm:text-sm w-full sm:w-auto justify-center sm:justify-start">
+                                <span className="hidden sm:inline">Detaylı Analiz</span>
+                                <span className="sm:hidden">Analiz</span>
+                                <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                               </Button>
                             </div>
                           </div>

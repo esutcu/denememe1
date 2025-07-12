@@ -204,13 +204,13 @@ const Layout = ({ children }: LayoutProps) => {
                 </DropdownMenu>
               ) : (
                 <div className="flex items-center space-x-3">
-                  <Button variant="ghost" size="sm" asChild className="glass-button rounded-xl text-white/80 hover:text-white transition-all duration-300 hover:scale-105">
+                  <Button variant="ghost" size="sm" asChild className="glass-button rounded-xl text-foreground/80 hover:text-foreground dark:text-white/80 dark:hover:text-white transition-all duration-300 hover:scale-105">
                     <Link to="/auth">
                       <LogIn className="mr-2 h-4 w-4" />
                       Giriş Yap
                     </Link>
                   </Button>
-                  <Button size="sm" asChild className="glass-medium rounded-xl text-white border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105 shadow-lg">
+                  <Button size="sm" asChild className="glass-medium rounded-xl text-foreground dark:text-white border-border dark:border-white/20 hover:border-border/60 dark:hover:border-white/40 transition-all duration-300 hover:scale-105 shadow-lg">
                     <Link to="/auth">
                       <User className="mr-2 h-4 w-4" />
                       Kayıt Ol

@@ -69,36 +69,41 @@ export default function AdminPanel() {
     <div className="min-h-screen bg-slate-900 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
-              <Brain className="h-8 w-8 text-blue-400" />
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground flex items-center gap-2">
+              <Brain className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
               Admin Panel
             </h1>
-            <p className="text-muted-foreground mt-2">ScoreResultsAI sistem yönetimi</p>
+            <p className="text-muted-foreground mt-2 text-sm sm:text-base">ScoreResultsAI sistem yönetimi</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             <Button 
               onClick={() => getAdminStats()} 
               variant="outline" 
               disabled={loading}
-              className="border-border text-foreground hover:bg-muted"
+              size="sm"
+              className="border-border text-foreground hover:bg-muted text-xs sm:text-sm"
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              Yenile
+              <RefreshCw className={`h-3 w-3 sm:h-4 sm:w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">Yenile</span>
+              <span className="sm:hidden">Yenile</span>
             </Button>
             <Button 
               onClick={triggerWeeklyBatch} 
               disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700"
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm"
             >
-              <Zap className="h-4 w-4 mr-2" />
-              Batch Çalıştır
+              <Zap className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+              <span className="hidden sm:inline">Batch Çalıştır</span>
+              <span className="sm:hidden">Batch</span>
             </Button>
             <Link to="/admin/llm">
-              <Button variant="secondary" className="bg-slate-700 hover:bg-slate-600">
-                <Settings className="h-4 w-4 mr-2" />
-                LLM Yönetimi
+              <Button variant="secondary" size="sm" className="bg-slate-700 hover:bg-slate-600 text-xs sm:text-sm">
+                <Settings className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                <span className="hidden sm:inline">LLM Yönetimi</span>
+                <span className="sm:hidden">LLM</span>
               </Button>
             </Link>
           </div>
